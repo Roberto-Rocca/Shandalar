@@ -86,7 +86,9 @@ int card_lord_of_atlantis2(int player, int card, event_t event){
 
 int card_bribery(int player, int card, event_t event){
 // original code : 0040F730
-	return steal_permanent_from_target_opponent_deck(player, card, event, TYPE_CREATURE, 0, 0, 0, 0, 0, 0, 0, -1, 0);
+	test_definition_t creature_test;
+	new_default_test_definition(&creature_test, TYPE_CREATURE, "Select a creature");
+	return steal_permanent_from_target_opponent_deck(player, card, event, &creature_test);
 }
 
 int card_kid_ape2(int player, int card, event_t event){
