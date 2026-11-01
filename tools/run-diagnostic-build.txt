@@ -19,3 +19,6 @@ Through commit bd729f7
 Diagnostic build request 7
 Purpose: complete compiler/linker error inventory after Evil Twin correction; untruncated diagnostics
 Through commit 0459c3b
+Diagnostic build request 8
+Batch: make legacy Goblin Tutor reveal calls compile with current API (no gameplay support planned)
+Through commit 8633ed7
