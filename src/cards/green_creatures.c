@@ -127,7 +127,7 @@ int card_elvish_spirit_guide(int player, int card, event_t event){
         discard_card(player, card);
         rfg_card_from_grave(player, count_graveyard(player) - 1);
     }
-    else if( event == EVENT_REVOLVE_ACTIVATION_FROM_HAND ){
+    else if( event == EVENT_RESOLVE_ACTIVATION_FROM_HAND ){
         produce_mana(player, COLOR_GREEN, 1);
     }
     return 0;
