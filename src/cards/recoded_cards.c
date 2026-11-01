@@ -197,7 +197,7 @@ int card_tetravus2(int player, int card, event_t event){
 			if( choice == 1 ){
 				while( tetravites > 0 ){
 						if( pick_target(&td, "TETRAVITE") ){
-							if( get_id(instance->targets[0].player, instance->targets[0].card) == get_id_by_name("Tetravite") ){
+							if( get_id(instance->targets[0].player, instance->targets[0].card) == CARD_ID_TETRAVITE ){
 								if( instance->targets[8].player == get_special_infos(instance->targets[0].player,instance->targets[0].card) ){
 									kill_card(instance->targets[0].player,instance->targets[0].card, KILL_SACRIFICE);
 									add_1_1_counter(player, card);
