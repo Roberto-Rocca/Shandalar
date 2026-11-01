@@ -65,6 +65,17 @@ int is_green(int player, int card){
     return 0;
 }
 
+/* Selection callback receives an internal card id, not a battlefield card. */
+static int farseek_land_filter(int internal_id, int ignored, int player, int card){
+    (void)ignored;
+    (void)player;
+    (void)card;
+    return has_subtype(-1, internal_id, SUBTYPE_SWAMP)
+        || has_subtype(-1, internal_id, SUBTYPE_ISLAND)
+        || has_subtype(-1, internal_id, SUBTYPE_MOUNTAIN)
+        || has_subtype(-1, internal_id, SUBTYPE_PLAINS);
+}
+
 int card_farseek(int player, int card, event_t event){
     if( event == EVENT_CAN_CAST ){
         return 1;
@@ -74,7 +85,8 @@ int card_farseek(int player, int card, event_t event){
 			test_definition_t this_test;
 			new_default_test_definition(&this_test, TYPE_LAND, buffer);
 			this_test.subtype = SUBTYPE_SWAMP;
-			this_test.multi_subtype_tutor = 1;
+			this_test.subtype_flag = DOESNT_MATCH;
+			this_test.special_selection_function = farseek_land_filter;
 			this_test.sub2 = SUBTYPE_ISLAND;
 			this_test.sub3 = SUBTYPE_MOUNTAIN;
 			this_test.sub4 = SUBTYPE_PLAINS;
