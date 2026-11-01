@@ -52,3 +52,6 @@ Through commit 51f139d
 Diagnostic build request 18
 Batch: use canonical CARD_ID_TETRAVITE instead of unresolved get_id_by_name in Tetravus docking
 Through commit 01bdf36
+Diagnostic build request 19
+Batch: replace missing is_aura in Pentavite handler with explicitly defined SUBTYPE_AURA subtype check
+Through commit 9bc02d7
