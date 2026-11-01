@@ -1830,7 +1830,7 @@ int card_living_artifact(int player, int card, event_t event){
 			reason_for_trigger_controller == player
 		  ){
 			int trig = 0;
-			if( count_counters(player, card) > 0 ){
+			if( count_counters(player, card, -1) > 0 ){
 				trig = 1;
 			}
 			if( trig == 1 ){
@@ -2183,7 +2183,7 @@ int card_soul_net(int player, int card, event_t event){
 			if( ! has_mana(player, COLOR_COLORLESS, 1) ){
 				break;
 			}
-			charge_mana_while_resolving(player, card, EVENT_RESOLVE_TRIGGER, COLOR_COLORLESS, 1);
+			charge_mana_while_resolving(player, card, EVENT_RESOLVE_TRIGGER, player, COLOR_COLORLESS, 1);
 			if( spell_fizzled == 1 ){
 				break;
 			} else {
