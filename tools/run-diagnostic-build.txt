@@ -64,3 +64,6 @@ Through commit c06b0b6
 Diagnostic build request 22
 Batch: restore Battering Ram and Tawnos Weaponry legacy executable symbol addresses, no card logic changes
 Through commit 841c196
+Diagnostic build request 23
+Batch: test documented Ashnod's Transmogrant original executable address only; do not change card logic
+Through commit bc76cfd
