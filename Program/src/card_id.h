@@ -15658,7 +15658,14 @@ typedef enum
   CARD_ID_STONE_HAVEN_OUTFITTER              =20009,
   CARD_ID_SIFTER_OF_SKULLS                   =20010,
   CARD_ID_KALITAS_TRAITOR_OF_GHET            =20011,
-  CARD_ID_GLADEHART_CAVALRY                  =20012
+  CARD_ID_GLADEHART_CAVALRY                  =20012,
+  /* Provisional Shadows over Innistrad identifiers; database synchronization pending. */
+  CARD_ID_CLUE                                   =20013,
+  CARD_ID_ERDWAL_ILLUMINATOR                     =20014,
+  CARD_ID_HUMAN_CLERIC                           =20015,
+  CARD_ID_WAYWARD_DISCIPLE                       =20016,
+  CARD_ID_JACE_UNRAVELER_OF_SECRETS_EMBLEM       =20017,
+  CARD_ID_VAMPIRE_KNIGHT                         =20018
 } card_id_t;
 
 #endif
