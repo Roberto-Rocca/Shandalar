@@ -2,6 +2,11 @@ name: Shandalar 32-bit build diagnostic
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - diagnostics/32bit-build
+    paths:
+      - tools/run-diagnostic-build.txt
 
 jobs:
   diagnostic:
