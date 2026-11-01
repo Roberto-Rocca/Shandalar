@@ -91,8 +91,8 @@ def main():
         ],
     }
     out = ROOT / "card-id-audit.json"
-    out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
-    print(f"\\nWrote detailed audit: {out.name}, {len(detail)} unresolved symbols (excluding header guard)")
+    out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"\nWrote detailed audit: {out.name}, {len(detail)} unresolved symbols (excluding header guard)")
     print("References in rules_engine.c requiring manual review:")
     for symbol, locations in sorted(detail.items()):
         matches = [p for p in locations if p["path"] == "src/functions/rules_engine.c"]
