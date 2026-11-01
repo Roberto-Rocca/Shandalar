@@ -2,26 +2,6 @@
 
 section .text
 
-global _in_play
-_in_play:
-  push  ebp
-  mov ebp, esp
-  push esi
-  mov ecx, CardID
-  mov eax, PlayerID
-  call 0x401A40
-  jnz is_not
-  mov eax, 1
-  jmp get_out
-
-is_not:
-  xor eax, eax
-
-get_out:
-  pop   esi
-  leave
-  ret
-  align 32
 
 global _is_not_dead
 _is_not_dead:
