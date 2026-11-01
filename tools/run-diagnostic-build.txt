@@ -46,3 +46,6 @@ Through commit 8f83e1e
 Diagnostic build request 16
 Batch: CSV-to-internal card ID color adapter for cost modifiers; preserve Gloom and Illusions of Grandeur behavior
 Through commit 9593b38
+Diagnostic build request 17
+Batch: use target_definition_t required_subtype + can_target for Volcanic Eruption checks
+Through commit 51f139d
