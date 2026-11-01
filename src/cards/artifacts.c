@@ -88,7 +88,7 @@ int card_vedalken_shackles(int player, int card, event_t event){
     if( event == EVENT_RESOLVE_ACTIVATION ){
         td.power_requirement = count_subtype(player, TYPE_LAND, SUBTYPE_ISLAND) | TARGET_PT_LESSER_OR_EQUAL;
 		if( valid_target(&td) && in_play(instance->parent_controller, instance->parent_card) && is_tapped(instance->parent_controller, instance->parent_card)){
-			gain_control_until_source_is_in_play_and_tapped(player, instance->parent_card, instance->targets[0].player, instance->targets[0].card);
+			gain_control_until_source_is_in_play_and_tapped(player, instance->parent_card, instance->targets[0].player, instance->targets[0].card, GCUS_TAPPED);
         }
     }
 	return generic_activated_ability(player, card, event, GAA_UNTAPPED+GAA_NONSICK+GAA_CAN_TARGET, 2, 0, 0, 0, 0, 0, 0, &td, "TARGET_CREATURE");
