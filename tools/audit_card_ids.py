@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Read-only audit of the legacy Manalink card table and source references."""
 import csv
+import json
 import re
 from pathlib import Path
 
@@ -66,6 +67,37 @@ def main():
     print(f"\nSource card ID symbols not defined by Program/src/card_id.h: {len(references)}")
     for name, paths in sorted(references.items()):
         print(f"  {name}: {', '.join(paths[:5])}" + (" ..." if len(paths) > 5 else ""))
+    # Keep source locations for a reviewable, machine-readable inventory.
+    detail = {}
+    for path in sorted(SRC.rglob("*")):
+        if path.suffix not in {".c", ".cpp", ".h"}:
+            continue
+        for lineno, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+            for symbol in set(CARD_ID_PATTERN.findall(line)):
+                if symbol not in definitions and symbol != "CARD_ID_H":
+                    detail.setdefault(symbol, []).append({
+                        "path": str(path.relative_to(ROOT)),
+                        "line": lineno,
+                        "source": line.strip()[:240],
+                    })
+    report = {
+        "defined_ids": len(definitions),
+        "duplicate_numeric_ids": duplicates,
+        "unresolved_symbols": detail,
+        "limitations": [
+            "Lexical scan: comments, disabled preprocessor branches and macro tokens may be listed.",
+            "A missing ID is not evidence that a new numeric ID may safely be assigned.",
+            "CSV column shape differs from historical Manalink.csv: no conversion is attempted.",
+        ],
+    }
+    out = ROOT / "card-id-audit.json"
+    out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+    print(f"\\nWrote detailed audit: {out.name}, {len(detail)} unresolved symbols (excluding header guard)")
+    print("References in rules_engine.c requiring manual review:")
+    for symbol, locations in sorted(detail.items()):
+        matches = [p for p in locations if p["path"] == "src/functions/rules_engine.c"]
+        if matches:
+            print(f"  {symbol}: " + ", ".join(str(p["line"]) for p in matches))
     inspect_csv(CURRENT_CSV)
     print("\nThis is an inventory only. It does not renumber cards or write .dat files.")
 
