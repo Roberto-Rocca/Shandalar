@@ -1469,7 +1469,7 @@ static void static_graveyard_abilities(int player, int card, event_t event){
 					CARD_ID_AKOUM_FIREBIRD,	// 21
 					CARD_ID_CENTAUR_VINECRASHER, //22
 					CARD_ID_KOZILEKS_RETURN, //23
-					CARD_ID_PRIZED_AMALGAM, //24
+					-1, //24 Prized Amalgam: card ID absent from legacy database
 	};
 
 	enum{
@@ -2233,12 +2233,17 @@ static int initial_upkeep_triggers(int player, int card, event_t event ){
 								state_untargettable(i, count, 0);
 							}
 						}
+						/* Providence is not present in the legacy card ID table.
+						 * Re-enable this effect when the card database is synchronized.
+						 */
+#if 0
 						if( id == CARD_ID_PROVIDENCE ){
 							int choice2 = do_dialog(i, i, count, -1, -1, " Reveal Providence\n Pass", 0);
 							if( choice2 == 0 ){
 								set_life_total(i, 26);
 							}
 						}
+#endif
 					}
 					count--;
 			}
@@ -2586,8 +2591,7 @@ int check_card_for_rules_engine(int card){
 			cards_data[card].id == CARD_ID_CHANCELLOR_OF_THE_SPIRES ||
 			cards_data[card].id == CARD_ID_CHANCELLOR_OF_THE_TANGLE ||
 			cards_data[card].id == CARD_ID_GEMSTONE_CAVERNS ||
-			cards_data[card].id == CARD_ID_SERRA_AVENGER ||
-			cards_data[card].id == CARD_ID_PROVIDENCE
+			cards_data[card].id == CARD_ID_SERRA_AVENGER
 		  ){
 			result |= REF_LEYLINES;
 		}
@@ -3108,7 +3112,7 @@ static void check_trap_conditions(int player, int card, event_t event){
 				increase_trap_condition(affected_card_controller, TRAP_DEAD_ZUBERA_COUNT, 1);
 			}
 			/* Older card databases do not provide a Clue token ID. */
-#ifdef CARD_ID_CLUE
+#if 0 /* CARD_ID_CLUE is an enum constant, not a preprocessor macro; legacy ID missing. */
 			if( get_id(affected_card_controller, affected_card) == CARD_ID_CLUE && kill_code == KILL_SACRIFICE ){
 				increase_trap_condition(affected_card_controller, TRAP_CLUES_SACRIFICED, 1);
 			}
