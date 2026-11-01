@@ -250,7 +250,7 @@ int card_hells_caretaker(int player, int card, event_t event){
 			int selected = new_select_target_from_grave(player, card, player, 0, AI_MAX_CMC, &this_test, 0);
 			if( selected != -1 ){
 				if( sacrifice(player, card, player, 0, TYPE_CREATURE, 0, 0, 0, 0, 0, 0, 0, -1, 0) ){
-					int *grave = graveyard_ptr[player];
+					const int *grave = get_grave(player);
 					instance->targets[1].player = selected;
 					instance->targets[1].card = grave[selected];
 					tap_card(player, card);
@@ -276,11 +276,11 @@ int card_hells_caretaker(int player, int card, event_t event){
 }
 
 int card_ashen_ghoul(int player, int card, event_t event){
-  haste(player, card);
+  haste(player, card, event);
 
   if( event == EVENT_GRAVEYARD_ABILITY_UPKEEP ){
      int position = 0;
-     int *graveyard = graveyard_ptr[player];
+     const int *graveyard = get_grave(player);
      int victims = 0;
      int count = count_graveyard(player) - 1;
      while( count > -1 ){
@@ -315,11 +315,11 @@ int card_ashen_ghoul(int player, int card, event_t event){
 }
 
 int card_nshadow(int player, int card, event_t event){
-  haste(player, card);
+  haste(player, card, event);
 
   if( event == EVENT_GRAVEYARD_ABILITY_UPKEEP ){
      int position = 0;
-     int *graveyard = graveyard_ptr[player];
+     const int *graveyard = get_grave(player);
      int victims = 0;
      int count = count_graveyard(player) - 1;
      while( count > -1 ){
