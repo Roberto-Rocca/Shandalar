@@ -73,17 +73,14 @@ void double_strike(int player, int card, event_t event){
             buddy = instance->blocking;
         }
         instance->targets[8].card = buddy;
-        poison_counters[AI] = buddy;
     }
     else if( current_phase == PHASE_NORMAL_COMBAT_DAMAGE ){
-        poison_counters[HUMAN] = 1;
     if( instance->targets[8].card != -2 ){
         if( instance->targets[8].card == -1 ){
             instance->targets[8].card = -2;
             damage_player(1-player, get_power( player, card ), player, card);
         }
         else if( instance->targets[8].card > -1 && in_play(1-player, instance->targets[8].card) ){
-            life[HUMAN] = instance->targets[8].card;
             damage_creature(1-player, instance->targets[8].card, get_power( player, card ), player, card);
             instance->targets[8].card = -2;
         }
