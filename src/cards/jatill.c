@@ -458,24 +458,11 @@ int card_arboria(int player, int card, event_t event){
 		instance->targets[2].player = 1;
 	}
 
-	// You can only be attacked if you are not safe
-    if( trigger_condition == TRIGGER_DECLARE_ATTACK && current_phase == PHASE_DECLARE_ATTACKERS ){
-        if( affect_me( trigger_cause_controller, trigger_cause ) && reason_for_trigger_controller == affected_card_controller ){
-			int trig = 0;
-			if( instance->targets[(1-current_turn)+1].player == 1 ){
-				trig = 1;
-			}
-			if( trig == 1 ){
-                if(event == EVENT_TRIGGER){
-                   event_result |= 2;
-                }
-                else if( event == EVENT_RESOLVE_TRIGGER){
-                         forbid_attack = 1;
-                }
-			}
-        }
-    }
-
+	// Apply the restriction at the attack legality event, not a missing trigger.
+	if( event == EVENT_ATTACK_LEGALITY && affected_card_controller == current_turn
+		&& instance->targets[(1-current_turn)+1].player == 1 ){
+		forbid_attack = 1;
+	}
 
 	// Reset "safeness" each turn
 	if( current_phase == PHASE_UNTAP ){
@@ -557,26 +544,11 @@ int card_teferis_moat(int player, int card, event_t event){
 	if( event == EVENT_RESOLVE_SPELL && affect_me(player, card) ){
 		 instance->info_slot = select_a_color(player);
 	}
-	if( event == EVENT_ATTACK_LEGALITY && current_turn == 1-player ){
-		if( trigger_condition == TRIGGER_DECLARE_ATTACK && current_phase == PHASE_DECLARE_ATTACKERS ){
-			if( affect_me( trigger_cause_controller, trigger_cause ) && 
-				reason_for_trigger_controller == affected_card_controller
-			  ){
-				int trig = 0;
-				if( get_color(trigger_cause_controller, trigger_cause) & instance->info_slot ){
-					trig = 1;
-				}
-				if( trig == 1 ){
-					if(event == EVENT_TRIGGER){
-						event_result |= 2;
-					}
-					else if(event == EVENT_RESOLVE_TRIGGER){
-							forbid_attack = 1;
-					}
-				}
-			}
-		}
-    }
+	if( event == EVENT_ATTACK_LEGALITY && current_turn == 1-player
+		&& affected_card_controller == current_turn
+		&& (get_color(affected_card_controller, affected_card) & instance->info_slot) ){
+		forbid_attack = 1;
+	}
     return global_enchantment(player, card, event);
 }
 
