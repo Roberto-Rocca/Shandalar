@@ -2267,7 +2267,7 @@ int card_nevinyrrals_disk(int player, int card, event_t event){
 	
 	if( event == EVENT_RESOLVE_ACTIVATION ){
 		test_definition_t this_test;
-		default_test_definition(&this_test, TYPE_NONLAND);
+		default_test_definition(&this_test, TYPE_ARTIFACT | TYPE_CREATURE | TYPE_ENCHANTMENT);
 		this_test.type_flag = F1_NO_PWALKER;
 		new_manipulate_all(player, card, 2, &this_test, KILL_DESTROY);
 	}
