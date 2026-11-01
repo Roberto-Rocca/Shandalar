@@ -7,3 +7,6 @@ Through commit f0f079d
 Diagnostic build request 3
 Batch: missing shared-engine card IDs and eliminate duplicated affect_me implementation
 Through commit 6d3c19a
+Diagnostic build request 4
+Batch: Bribery creature filter, Soul Net mana payer, Living Artifact counter query, Fire Imp target; prior ID and reanimation signature fixes
+Through commit 181a686
