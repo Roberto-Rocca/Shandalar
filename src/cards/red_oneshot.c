@@ -83,25 +83,25 @@ int card_goblin_tutor(int player, int card, event_t event){
         int roll = internal_rand(6) + 1;
         int type = 0;;
         if( roll == 1 ){
-            reveal_card(player, player, card, player, card, "You rolled 1, no effect", 1);
+            reveal_card(player, card, player, card);
         }
         else if( roll == 2 ){
-            reveal_card(player, player, card, player, card, "You rolled 2, search for Goblin Tutor", 1);
+            reveal_card(player, card, player, card);
         }
         else if( roll == 3 ){
-            reveal_card(player, player, card, player, card, "You rolled 3, find an Enchantment", 1);
+            reveal_card(player, card, player, card);
             type = TYPE_ENCHANTMENT;
         }
         else if( roll == 4 ){
-            reveal_card(player, player, card, player, card, "You rolled 4, find an Artifact", 1);
+            reveal_card(player, card, player, card);
             type = TYPE_ARTIFACT;
         }
         else if( roll == 5 ){
-            reveal_card(player, player, card, player, card, "You rolled 5, find a Creature", 1);
+            reveal_card(player, card, player, card);
             type = TYPE_CREATURE;
         }
         else if( roll == 6 ){
-            reveal_card(player, player, card, player, card, "You rolled 6, find an Instant or Sorcery", 1);
+            reveal_card(player, card, player, card);
             type = TYPE_INSTANT | TYPE_SORCERY | TYPE_INTERRUPT;
         }
 
