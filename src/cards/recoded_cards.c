@@ -229,7 +229,7 @@ int card_slith_predator(int player, int card, event_t event){
 
 int card_slith_firewalker(int player, int card, event_t event){
 
-    haste(player, card);
+    haste(player, card, event);
 
     return card_slith_predator(player, card, event);
 }
@@ -459,7 +459,7 @@ int card_nuisance_engine(int player, int card, event_t event){
 // original code : 004DAC3A
 
     if( event == EVENT_RESOLVE_ACTIVATION ){
-        generate_token_by_id(player, CARD_ID_PEST);
+        generate_token_by_id(player, card, CARD_ID_PEST);
     }
 
 	return generic_activated_ability(player, card, event, GAA_UNTAPPED+GAA_NONSICK, 2, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -748,7 +748,7 @@ int card_raise_the_alarm(int player, int card, event_t event){
 	}
 	
 	else if( event == EVENT_RESOLVE_SPELL ){
-			generate_tokens_by_id(player, CARD_ID_SOLDIER, 2);
+			generate_tokens_by_id(player, card, CARD_ID_SOLDIER, 2);
 			kill_card(player, card, KILL_DESTROY);
 	}
 	return 0;
@@ -1892,8 +1892,8 @@ int card_biorythm(int player, int card, event_t event){
 	}
         
     else if(event == EVENT_RESOLVE_SPELL ){
-			set_life_total(player, count_permanents_by_type(player, card, TYPE_CREATURE));
-			set_life_total(1-player, count_permanents_by_type(1-player, card, TYPE_CREATURE));
+			set_life_total(player, count_permanents_by_type(player, TYPE_CREATURE));
+			set_life_total(1-player, count_permanents_by_type(1-player, TYPE_CREATURE));
 			kill_card(player, card, KILL_DESTROY);
     }
 	return 0;	
