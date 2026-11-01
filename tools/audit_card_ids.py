@@ -114,6 +114,31 @@ def main():
     program_matches = crosscheck_card_names(
         detail, PROGRAM_MANALINK_CSV, ("Full Name", "Name"), ("ID",)
     )
+    # A historical name match is not enough: the numeric slot must also be free.
+    # In particular, never reuse a historical ID that belongs to another symbol.
+    occupied = {number: name for name, number in definitions.items()}
+    historical_id_review = {}
+    for symbol, rows in historical_matches.items():
+        candidates = []
+        for row in rows:
+            raw_id = (row.get("ID") or "").strip()
+            if not raw_id.isdigit():
+                continue
+            number = int(raw_id)
+            occupant = occupied.get(number)
+            candidates.append({
+                "id": number,
+                "csv_name": row.get("Full Name") or row.get("Name") or "",
+                "existing_symbol_at_id": occupant,
+                "status": "occupied" if occupant and occupant != symbol else "unoccupied",
+            })
+        historical_id_review[symbol] = candidates
+    conflicts = [(symbol, candidate) for symbol, candidates in historical_id_review.items()
+                 for candidate in candidates if candidate["status"] == "occupied"]
+    print(f"Historical CSV ID collisions with current header: {len(conflicts)}")
+    for symbol, candidate in conflicts:
+        print(f"  {symbol}: historical ID {candidate['id']} is {candidate['existing_symbol_at_id']}")
+    print("No card IDs were assigned or changed.")
     print("Symbol matches by CSV (strict normalized names):")
     for path, mapping in [
         (CURRENT_CSV, csv_matches),
@@ -129,6 +154,8 @@ def main():
         "manalink_card_name_matches": historical_matches,
         "program_manalink_card_name_matches": program_matches,
         "defined_ids": len(definitions),
+        "historical_id_review": historical_id_review,
+        "historical_id_conflict_count": len(conflicts),
         "duplicate_numeric_ids": duplicates,
         "unresolved_symbols": detail,
         "limitations": [
