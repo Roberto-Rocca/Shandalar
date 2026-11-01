@@ -65,6 +65,8 @@ jobs:
           echo "Build exit code: $code"
           echo "First 120 lines:"
           head -n 120 build.log
+          echo "Compiler/linker errors (with context):"
+          grep -n -C 3 -E "(fatal error:|error:|undefined reference|No rule to make target|collect2:|ld:)" build.log | head -n 250 || true
           echo "Last 120 lines:"
           tail -n 120 build.log
           echo "exit_code=$code" >> "$GITHUB_ENV"
