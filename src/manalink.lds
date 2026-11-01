@@ -285,6 +285,9 @@ _card_demonic_tutor_exe = 0x0041D7C0;
 /* Additional original entry points noted in recoded_cards.c; runtime unverified. */
 _card_rock_hydra_exe = 0x00454ED0;
 _card_giant_spider_exe = 0x004C7D10;
+/* Legacy executable addresses; linkage experiment, not runtime validation. */
+_card_battering_ram_exe = 0x00422CC0;
+_card_tawnoss_weaponry = 0x00422950;
 
 /*
 _card_aladdin_exe = 0x450F90;
