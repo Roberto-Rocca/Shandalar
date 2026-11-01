@@ -66,7 +66,7 @@ int card_simian_spirit_guide(int player, int card, event_t event){
         put_on_top_of_deck(player, card );
         rfg_top_card_of_deck(player);
     }
-    else if( event == EVENT_REVOLVE_ACTIVATION_FROM_HAND ){
+    else if( event == EVENT_RESOLVE_ACTIVATION_FROM_HAND ){
         produce_mana(player, COLOR_RED, 1);
     }
     return 0;
