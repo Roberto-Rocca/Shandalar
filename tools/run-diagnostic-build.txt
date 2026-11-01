@@ -37,3 +37,6 @@ Through commit 1f868b2
 Diagnostic build request 13
 Batch: Illusions of Grandeur uses typed age counters instead of obsolete generic counter functions
 Through commit 6f520ab
+Diagnostic build request 14
+Batch: remove undefined ability-icon suppression accessor by using already-implemented humiliation predicate; preserve Gloom and Illusions of Grandeur
+Through commit 91e3483
