@@ -703,10 +703,10 @@ int card_aether_vial  (int player, int card, event_t event){
     td.zone = TARGET_ZONE_HAND;
 
 	char buffer[100];
-	scnprintf(buffer, 100, "Select a Creature with cmc %d.", count_ccounters(player, card));
+	scnprintf(buffer, 100, "Select a Creature with cmc %d.", count_counters(player, card, COUNTER_CHARGE));
 	test_definition_t this_test;
 	new_default_test_definition(&this_test, TYPE_CREATURE, buffer);
-	this_test.cmc = count_ccounters(player, card);
+	this_test.cmc = count_counters(player, card, COUNTER_CHARGE);
 	this_test.zone = TARGET_ZONE_HAND;
 			
 	upkeep_trigger_ability(player, card, event, player);	
@@ -714,15 +714,15 @@ int card_aether_vial  (int player, int card, event_t event){
 	if( event == EVENT_UPKEEP_TRIGGER_ABILITY ){
 			int AI_choice = 0;
 			int most_common_cmc = get_most_common_cmc_in_hand(player, TYPE_CREATURE);
-			if( count_ccounters(player, card) >= most_common_cmc ){
+			if( count_counters(player, card, COUNTER_CHARGE) >= most_common_cmc ){
 				AI_choice = 1;
 			}
 
 			char buffer2[50];
-			snprintf(buffer2, 50, " Add a Counter (currently at %d)\n Do not add",  count_ccounters(player, card));
+			snprintf(buffer2, 50, " Add a Counter (currently at %d)\n Do not add",  count_counters(player, card, COUNTER_CHARGE));
 			int choice = do_dialog(player, player, card, -1, -1, buffer2, AI_choice);
 			if( choice == 0 ){
-				add_ccounter(player, card);
+				add_counter(player, card, COUNTER_CHARGE);
 			}
 	}
 
