@@ -15641,7 +15641,10 @@ typedef enum
   CARD_ID_ZOMBIE                        =15714,
   CARD_ID_ZOMBIE_GIANT                  =15715,
   CARD_ID_ZOMBIE_HORROR                 =15716,
-  CARD_ID_ZOMBIE_WIZARD                 =15717
+  CARD_ID_ZOMBIE_WIZARD                 =15717,
+  /* Provisional post-legacy IDs. No matching .dat records yet; diagnostic build only. */
+  CARD_ID_KOZILEKS_RETURN               =20000,
+  CARD_ID_PRIZED_AMALGAM                =20001
 } card_id_t;
 
 #endif
