@@ -726,19 +726,12 @@ int card_grey_ogre(int player, int card, event_t event ){
 }
 
 int card_solemn_simulacrum(int player, int card, event_t event){
-
-//    card_instance_t *instance = get_card_instance(player, card);
-
-    if( event == EVENT_RESOLVE_SPELL ){
-        int legacy = create_legacy_effect(player, card, &solemn_simulacrum_legacy);
-        card_instance_t *leg = get_card_instance(player, legacy);
-        leg->targets[0].card = card;
-        leg->targets[0].player = player;
-		if(	check_for_cip_effects_removal(player, card) > 0 ){
-			tutor_basic_land(player, 1, 1);
-		}
+    if( comes_into_play(player, card, event) ){
+        tutor_basic_land(player, 1, 1);
     }
-
+    if( this_dies_trigger(player, card, event, RESOLVE_TRIGGER_MANDATORY) ){
+        draw_cards(player, 1);
+    }
     return 0;
 }
 
