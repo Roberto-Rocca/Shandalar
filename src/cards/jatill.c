@@ -8,7 +8,7 @@ int card_elemental_token(int player, int card, event_t event){
 
     // Rakka Mar Tokens
 	if(get_special_infos(player, card) == 141 ){
-		haste(player, card);
+		haste(player, card, event);
 		modify_pt_and_abilities(player, card, event, 3, 1, 0);
 	}
 	else if( get_special_infos(player, card) > 0 && get_special_infos(player, card) < 100 ){
@@ -103,7 +103,7 @@ int pick_creature_in_a_graveyard(int player, int card, int mandatory, int curren
         }
     }
 	if( selected > -1 ){
-		int *grave = graveyard_ptr[instance->targets[0].player];
+		const int *grave = get_grave(instance->targets[0].player);
 		instance->targets[10].player = grave[selected];
 		instance->targets[10].card = selected;
 	}
@@ -544,7 +544,7 @@ int effect_exile_at_eot(int player, int card, event_t event ){
     card_instance_t *instance = get_card_instance(player, card);
     int p = instance->targets[0].player;
     int c = instance->targets[0].card;
-	haste(p, c);
+	haste(p, c, event);
     if( current_turn == player && eot_trigger(player, card, event) ){
 		kill_card(p, c, KILL_REMOVE);
     	kill_card(player, card, KILL_REMOVE);
