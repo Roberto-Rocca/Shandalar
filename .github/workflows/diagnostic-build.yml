@@ -1,0 +1,81 @@
+name: Shandalar 32-bit build diagnostic
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - diagnostics/32bit-build
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install 32-bit Windows toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make mingw-w64 yasm binutils-mingw-w64-i686
+
+      - name: Inspect files and compiler versions
+        shell: bash
+        run: |
+          set -eu
+          i686-w64-mingw32-gcc --version | head -n 1
+          i686-w64-mingw32-g++ --version | head -n 1
+          yasm --version | head -n 1
+          echo "Possible generated headers:"
+          find . -iname 'card_id.h' -o -iname '*csv2dat*' -o -iname 'makecsv2dat*' | head -n 100
+          echo "Source build inputs:"
+          ls -la src/Makefile* src/*.def
+
+      - name: Resolve card_id.h if available
+        shell: bash
+        run: |
+          set -eu
+          if [ ! -f src/card_id.h ]; then
+            found="$(find . -type f -name card_id.h -not -path './src/card_id.h' -print -quit)"
+            if [ -n "$found" ]; then
+              cp "$found" src/card_id.h
+              echo "Copied $found to src/card_id.h"
+            else
+              echo "::warning::card_id.h not found; compilation will reveal dependent failures"
+            fi
+          fi
+
+      - name: Attempt 32-bit build and retain error log
+        shell: bash
+        run: |
+          set +e
+          make -C src -k -j2 \
+            CC=i686-w64-mingw32-gcc \
+            CXX=i686-w64-mingw32-g++ \
+            OBJCOPY=i686-w64-mingw32-objcopy \
+            DLLTOOL=i686-w64-mingw32-dlltool \
+            > build.log 2>&1
+          code=$?
+          echo "Build exit code: $code"
+          echo "First 120 lines:"
+          head -n 120 build.log
+          echo "Last 120 lines:"
+          tail -n 120 build.log
+          echo "exit_code=$code" >> "$GITHUB_ENV"
+
+      - name: Upload diagnostic log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shandalar-build-log
+          path: build.log
+          if-no-files-found: warn
+
+      - name: Report result
+        shell: bash
+        run: |
+          if [ "${exit_code:-1}" != 0 ]; then
+            echo "::error::Compilation failed; download shandalar-build-log for the first errors."
+            exit 1
+          fi
+          file src/ManalinkEh.dll
