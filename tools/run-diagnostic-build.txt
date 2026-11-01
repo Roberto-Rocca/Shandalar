@@ -34,3 +34,6 @@ Through commit 703c014
 Diagnostic build request 12
 Batch: Aether Vial charge-counter API, preserve Animate Dead until original shared state mapping is verified
 Through commit 1f868b2
+Diagnostic build request 13
+Batch: Illusions of Grandeur uses typed age counters instead of obsolete generic counter functions
+Through commit 6f520ab
