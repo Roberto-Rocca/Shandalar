@@ -15680,7 +15680,14 @@ typedef enum
   CARD_ID_SORIN_GRIM_NEMESIS                       =20029,
   CARD_ID_TAMIYO_FIELD_RESEARCHER                  =20030,
   CARD_ID_BURN_FROM_WITHIN                         =20031,
-  CARD_ID_STITCHERS_GRAFT                          =20032
+  CARD_ID_STITCHERS_GRAFT                          =20032,
+  /* Additional build-only IDs; matching database records still pending. */
+  CARD_ID_LONG_ROAD_HOME                           =20033,
+  CARD_ID_MINA_AND_DENN_WILDBORN                   =20034,
+  CARD_ID_THE_GITROG_MONSTER                       =20035,
+  CARD_ID_GEIST_FUELED_SCARECROW                   =20036,
+  CARD_ID_KRALLENHORDE_HOWLER                      =20037,
+  CARD_ID_FALKENRATH_GORGER                        =20038
 } card_id_t;
 
 #endif
