@@ -2296,7 +2296,7 @@ static int effect_illusionary_mask(int player, int card, event_t event){
 	return 0;
 }
 
-int hack_illusionary_mask_event = EVENT_CAN_ACTIVATE;
+extern int hack_illusionary_mask_event;
 int card_illusionary_mask(int player, int card, event_t event){
 
 	char msg[100] = "Choose a creature card to play face down.";
