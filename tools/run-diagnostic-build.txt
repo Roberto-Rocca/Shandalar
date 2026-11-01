@@ -22,3 +22,6 @@ Through commit 0459c3b
 Diagnostic build request 8
 Batch: make legacy Goblin Tutor reveal calls compile with current API (no gameplay support planned)
 Through commit 8633ed7
+Diagnostic build request 9
+Batch: Solemn Simulacrum death/ETB, Farseek subtype filter, attack legality triggers, double strike state, Infect icon
+Through commit 6f951a7
