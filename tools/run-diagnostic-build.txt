@@ -61,3 +61,6 @@ Through commit 1a3035c
 Diagnostic build request 21
 Batch: test Rock Hydra and Giant Spider original executable address bindings; linker diagnostic only
 Through commit c06b0b6
+Diagnostic build request 22
+Batch: restore Battering Ram and Tawnos Weaponry legacy executable symbol addresses, no card logic changes
+Through commit 841c196
