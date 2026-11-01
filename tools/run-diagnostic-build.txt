@@ -4,3 +4,6 @@ Commit group through ef61d8d
 Diagnostic build request 2
 Batch: red event; haste and graveyard calls; recoded_cards signatures; six provisional SOI IDs
 Through commit f0f079d
+Diagnostic build request 3
+Batch: missing shared-engine card IDs and eliminate duplicated affect_me implementation
+Through commit 6d3c19a
