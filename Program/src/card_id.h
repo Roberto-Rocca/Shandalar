@@ -15646,7 +15646,19 @@ typedef enum
   CARD_ID_KOZILEKS_RETURN               =20000,
   CARD_ID_PRIZED_AMALGAM                =20001,
   /* Historical CSV identifies Wastes as 15719; unused in this header. */
-  CARD_ID_WASTES                        =15719
+  CARD_ID_WASTES                        =15719,
+  /* Temporary unique IDs for diagnostic compilation; .dat records not generated. */
+  CARD_ID_ELDRAZI_HORROR                     =20002,
+  CARD_ID_HUMAN_SOLDIER                      =20003,
+  CARD_ID_HUMAN_WIZARD                       =20004,
+  CARD_ID_TAKE_INVENTORY                     =20005,
+  CARD_ID_TREE_OF_PERDITION                  =20006,
+  CARD_ID_DEVIL                              =20007,
+  CARD_ID_BOUND_BY_MOONSILVER                =20008,
+  CARD_ID_STONE_HAVEN_OUTFITTER              =20009,
+  CARD_ID_SIFTER_OF_SKULLS                   =20010,
+  CARD_ID_KALITAS_TRAITOR_OF_GHET            =20011,
+  CARD_ID_GLADEHART_CAVALRY                  =20012
 } card_id_t;
 
 #endif
