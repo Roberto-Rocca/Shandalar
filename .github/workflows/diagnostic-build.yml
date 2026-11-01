@@ -45,6 +45,10 @@ jobs:
             fi
           fi
 
+      - name: Audit legacy card IDs and CSV layout
+        run: |
+          python3 tools/audit_card_ids.py | tee card-id-audit.log
+
       - name: Attempt 32-bit build and retain error log
         shell: bash
         run: |
@@ -70,7 +74,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: shandalar-build-log
-          path: build.log
+          path: |\n            build.log\n            card-id-audit.log
           if-no-files-found: warn
 
       - name: Report result
