@@ -1132,7 +1132,7 @@ int card_myr_incubator( int player, int card, event_t event){
 			}
 		}
 
-		generate_tokens_by_id(player, CARD_ID_MYR, myr);
+		generate_tokens_by_id(player, card, CARD_ID_MYR, myr);
 		gain_life(player, 0);
 		shuffle(player);
 	}
