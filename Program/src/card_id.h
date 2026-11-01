@@ -15665,7 +15665,22 @@ typedef enum
   CARD_ID_HUMAN_CLERIC                           =20015,
   CARD_ID_WAYWARD_DISCIPLE                       =20016,
   CARD_ID_JACE_UNRAVELER_OF_SECRETS_EMBLEM       =20017,
-  CARD_ID_VAMPIRE_KNIGHT                         =20018
+  CARD_ID_VAMPIRE_KNIGHT                         =20018,
+  /* Diagnostic IDs only: database records and token metadata still required. */
+  CARD_ID_ARLINN_EMBRACED_BY_THE_MOON_EMBLEM       =20019,
+  CARD_ID_CARNIVORE                                =20020,
+  CARD_ID_FAITH_UNBROKEN                           =20021,
+  CARD_ID_ARLINN_KORD                              =20022,
+  CARD_ID_ARLINN_EMBRACED_BY_THE_MOON              =20023,
+  CARD_ID_CHANDRA_FLAMECALLER                      =20024,
+  CARD_ID_JACE_UNRAVELER_OF_SECRETS                =20025,
+  CARD_ID_LILIANA_THE_LAST_HOPE                    =20026,
+  CARD_ID_NAHIRI_THE_HARBINGER                     =20027,
+  CARD_ID_NISSA_VOICE_OF_ZENDIKAR                  =20028,
+  CARD_ID_SORIN_GRIM_NEMESIS                       =20029,
+  CARD_ID_TAMIYO_FIELD_RESEARCHER                  =20030,
+  CARD_ID_BURN_FROM_WITHIN                         =20031,
+  CARD_ID_STITCHERS_GRAFT                          =20032
 } card_id_t;
 
 #endif
