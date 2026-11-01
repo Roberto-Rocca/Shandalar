@@ -994,7 +994,7 @@ int card_willow_satyr(int player, int card, event_t event){
 
     if( event == EVENT_RESOLVE_ACTIVATION ){
 		if( valid_target(&td) && in_play(instance->parent_controller, instance->parent_card) && is_tapped(instance->parent_controller, instance->parent_card)){
-			gain_control_until_source_is_in_play_and_tapped(player, instance->parent_card, instance->targets[0].player, instance->targets[0].card);
+			gain_control_until_source_is_in_play_and_tapped(player, instance->parent_card, instance->targets[0].player, instance->targets[0].card, 0);
 		}
 	}
 
@@ -1288,7 +1288,7 @@ int card_orcish_catapult(int player, int card, event_t event){
 					if( amount > 1 ){
 						cnters = internal_rand(amount);
 					}
-					int cters = get_updated_counters_number(instance->targets[i+1].player, cnters);
+					int cters = get_updated_counters_number(instance->targets[i+1].player, instance->targets[i+1].card, COUNTER_P1_P1, cnters);
 					add_oc_counters(instance->targets[i+1].player, instance->targets[i+1].card, cters);
 					amount-=cnters;
 				}
