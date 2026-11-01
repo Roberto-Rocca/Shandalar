@@ -288,6 +288,9 @@ _card_giant_spider_exe = 0x004C7D10;
 /* Legacy executable addresses; linkage experiment, not runtime validation. */
 _card_battering_ram_exe = 0x00422CC0;
 _card_tawnoss_weaponry = 0x00422950;
+/* Ashnod's Transmogrant: source comment 0x044E240 (normalized 32-bit address). */
+/* Linker-only experiment; confirm bytes and function entry in the original Magic.exe. */
+_card_ashnods_trasmogrant_exe = 0x0044E240;
 
 /*
 _card_aladdin_exe = 0x450F90;
