@@ -75,6 +75,14 @@ jobs:
           tail -n 120 build.log
           echo "exit_code=$code" >> "$GITHUB_ENV"
 
+      - name: Audit duplicate and unresolved linker symbols
+        if: always()
+        shell: bash
+        run: |
+          if [ -f build.log ]; then
+            python3 tools/audit_linker_symbols.py build.log linker-symbol-audit.json
+          fi
+
       - name: Upload diagnostic log
         if: always()
         uses: actions/upload-artifact@v4
@@ -84,6 +92,8 @@ jobs:
             build.log
             card-id-audit.log
             card-id-audit.json
+            linker-symbol-audit.json
+            linker-symbol-audit.csv
           if-no-files-found: warn
 
       - name: Report result
