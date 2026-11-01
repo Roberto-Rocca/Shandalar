@@ -8,6 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ID_HEADER = ROOT / "Program/src/card_id.h"
 CURRENT_CSV = ROOT / "CSV/Magic.exe.Cards.csv"
+MANALINK_CSV = ROOT / "magic_updater/Manalink.csv"
+PROGRAM_MANALINK_CSV = ROOT / "Program/magic_updater/Manalink.csv"
 SRC = ROOT / "src"
 CARD_ID_PATTERN = re.compile(r"\b(CARD_ID_[A-Z0-9_]+)\b")
 DEFINITION_PATTERN = re.compile(r"\b(CARD_ID_[A-Z0-9_]+)\s*=\s*(\d+)\b")
@@ -48,25 +50,22 @@ def normalize_card_name(value):
     return re.sub(r"[^A-Z0-9]", "", value.upper())
 
 
-def crosscheck_card_names(symbols):
-    """Look for exact normalized card-name matches, without inferring an ID."""
-    result = {}
-    with CURRENT_CSV.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
+def crosscheck_card_names(symbols, csv_path, name_fields, id_fields):
+    """Match normalized names in a CSV. Never assign or rewrite an ID."""
+    result = {name: [] for name in symbols}
+    with csv_path.open("r", encoding="latin1", errors="replace", newline="") as handle:
         reader = csv.DictReader(handle, delimiter=";")
-        if not {"Card Name", "Card ID", "Card#"}.issubset(reader.fieldnames or []):
+        if not set(name_fields).intersection(reader.fieldnames or []):
+            print(f"WARNING: expected name fields not found in {csv_path}")
             return result
-        by_name = {}
+        normalized = {name: normalize_card_name(name.removeprefix("CARD_ID_")) for name in symbols}
         for row in reader:
-            key = normalize_card_name(row.get("Card Name", ""))
-            if key:
-                by_name.setdefault(key, []).append({
-                    "card_name": row.get("Card Name", ""),
-                    "card_id_field": row.get("Card ID", ""),
-                    "card_number": row.get("Card#", ""),
-                })
-    for symbol in sorted(symbols):
-        key = normalize_card_name(symbol.removeprefix("CARD_ID_"))
-        result[symbol] = by_name.get(key, [])
+            names = [row.get(field, "") or "" for field in name_fields]
+            keys = {normalize_card_name(name) for name in names if name.strip()}
+            for symbol, key in normalized.items():
+                if key and key in keys:
+                    record = {field: row.get(field, "") for field in (*name_fields, *id_fields)}
+                    result[symbol].append(record)
     return result
 
 
@@ -106,13 +105,29 @@ def main():
                         "line": lineno,
                         "source": line.strip()[:240],
                     })
-    csv_matches = crosscheck_card_names(detail)
-    matched_symbols = [name for name, rows in csv_matches.items() if rows]
-    print(f"Exact normalized card-name matches in current CSV: {len(matched_symbols)} / {len(detail)}")
-    for name in matched_symbols:
-        print(f"  {name}: " + ", ".join(f"{row['card_name']} (CSV Card ID {row['card_id_field']})" for row in csv_matches[name][:4]))
+    csv_matches = crosscheck_card_names(
+        detail, CURRENT_CSV, ("Card Name",), ("Card ID", "Card#")
+    )
+    historical_matches = crosscheck_card_names(
+        detail, MANALINK_CSV, ("Full Name", "Name"), ("ID",)
+    )
+    program_matches = crosscheck_card_names(
+        detail, PROGRAM_MANALINK_CSV, ("Full Name", "Name"), ("ID",)
+    )
+    print("Symbol matches by CSV (strict normalized names):")
+    for path, mapping in [
+        (CURRENT_CSV, csv_matches),
+        (MANALINK_CSV, historical_matches),
+        (PROGRAM_MANALINK_CSV, program_matches),
+    ]:
+        found = [name for name, rows in mapping.items() if rows]
+        print(f"  {path.relative_to(ROOT)}: {len(found)} / {len(detail)}")
+        for name in found:
+            print(f"    {name}: {mapping[name][:3]}")
     report = {
         "csv_card_name_matches": csv_matches,
+        "manalink_card_name_matches": historical_matches,
+        "program_manalink_card_name_matches": program_matches,
         "defined_ids": len(definitions),
         "duplicate_numeric_ids": duplicates,
         "unresolved_symbols": detail,
@@ -131,6 +146,8 @@ def main():
         if matches:
             print(f"  {symbol}: " + ", ".join(str(p["line"]) for p in matches))
     inspect_csv(CURRENT_CSV)
+    inspect_csv(MANALINK_CSV)
+    inspect_csv(PROGRAM_MANALINK_CSV)
     print("\nThis is an inventory only. It does not renumber cards or write .dat files.")
 
 
