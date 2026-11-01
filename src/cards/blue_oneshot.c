@@ -106,7 +106,7 @@ int card_mind_bend(int player, int card, event_t event){
 
 int card_echoing_truth(int player, int card, event_t event){
     target_definition_t td;
-    default_target_definition(player, card, &td, TYPE_NONLAND);
+    default_target_definition(player, card, &td, TYPE_ANY);
     td.illegal_type = TYPE_LAND;
     if( event == EVENT_CAN_CAST ){
         if(  target_available(player, card, &td) ){
