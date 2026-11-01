@@ -1,3 +1,6 @@
 Diagnostic build request 1
 Batch: compatibility calls and provisional card IDs
 Commit group through ef61d8d
+Diagnostic build request 2
+Batch: red event; haste and graveyard calls; recoded_cards signatures; six provisional SOI IDs
+Through commit f0f079d
