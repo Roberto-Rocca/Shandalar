@@ -278,6 +278,10 @@ _card_river_boa = 0x0040D650;
 _card_ghazban_ogre = 0x00452D40;
 _card_relic_bind = 0x004B7310;
 _card_assembly_worker_exe = 0x47AE00;
+/* Original Magic.exe card entry points, recorded alongside the wrappers in recoded_cards.c.
+ * These must be validated against the patched executable before runtime deployment. */
+_card_time_walk_exe = 0x0041B710;
+_card_demonic_tutor_exe = 0x0041D7C0;
 
 /*
 _card_aladdin_exe = 0x450F90;
