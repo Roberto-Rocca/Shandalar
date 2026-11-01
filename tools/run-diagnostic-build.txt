@@ -49,3 +49,6 @@ Through commit 9593b38
 Diagnostic build request 17
 Batch: use target_definition_t required_subtype + can_target for Volcanic Eruption checks
 Through commit 51f139d
+Diagnostic build request 18
+Batch: use canonical CARD_ID_TETRAVITE instead of unresolved get_id_by_name in Tetravus docking
+Through commit 01bdf36
