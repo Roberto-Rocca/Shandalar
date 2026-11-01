@@ -67,3 +67,6 @@ Through commit 841c196
 Diagnostic build request 23
 Batch: test documented Ashnod's Transmogrant original executable address only; do not change card logic
 Through commit bc76cfd
+Diagnostic build request 24
+Batch: read-only duplicate and unresolved symbol audit, no gameplay source changes
+Through commit 0c4746c
