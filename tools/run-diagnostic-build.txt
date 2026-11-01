@@ -40,3 +40,6 @@ Through commit 6f520ab
 Diagnostic build request 14
 Batch: remove undefined ability-icon suppression accessor by using already-implemented humiliation predicate; preserve Gloom and Illusions of Grandeur
 Through commit 91e3483
+Diagnostic build request 15
+Batch: restore get_forbid_activation_flag from existing three-nibble ability suppression state, avoiding edits to working card implementations
+Through commit 8f83e1e
