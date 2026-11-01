@@ -3758,7 +3758,7 @@ int card_lady_evangela(int player, int card, event_t event)
 
 int card_land_equilibrium(int player, int card, event_t event){
 	if( ! is_humiliated(player, card) && trigger_condition == TRIGGER_COMES_INTO_PLAY && affect_me(player, card) && reason_for_trigger_controller == player){
-		if( count_subtype(player, TYPE_LAND, -1)+1 == count_subtype(1-player, TYPE_LAND, -1) ){
+		if( count_subtype(player, TYPE_LAND, -1)+1 <= count_subtype(1-player, TYPE_LAND, -1) ){
 			test_definition_t this_test;
 			default_test_definition(&this_test, TYPE_LAND);
 			if( new_specific_cip(player, card, event, 1-player, RESOLVE_TRIGGER_MANDATORY, &this_test) ){
