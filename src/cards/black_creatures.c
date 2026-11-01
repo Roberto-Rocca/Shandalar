@@ -54,7 +54,7 @@ int card_horobi_deaths_wail(int player, int card, event_t event){
 int card_swamp_mosquito(int player, int card, event_t event){
     if( event == EVENT_DECLARE_BLOCKERS ){
         if( is_unblocked(player, card) ){
-            poison_counters[1-player]++;
+            poison(1-player, 1);
         }
     }
     return 0;
@@ -89,7 +89,7 @@ void dark_confidant_effect(int player, int card, int t_player){
 		remove_card_from_deck( t_player, 0 );
 		int cmc = get_cmc(t_player, card_added);
 		lose_life(t_player, cmc);
-		reveal_card(HUMAN, player, card, t_player, card_added, "Reveals", 0);
+		reveal_card(player, card, t_player, card_added);
 	}
 }
 
@@ -268,7 +268,7 @@ int card_hells_caretaker(int player, int card, event_t event){
 	if( event == EVENT_RESOLVE_ACTIVATION ){
 		int selected = validate_target_from_grave(player, card, player, 1);
 		if( selected != -1 ){
-			reanimate_permanent(player, card, player, selected, 0, 0);
+			reanimate_permanent(player, card, player, selected, 0);
 		}
 	}
 
