@@ -74,7 +74,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: shandalar-build-log
-          path: |\n            build.log\n            card-id-audit.log
+          path: |
+            build.log
+            card-id-audit.log
           if-no-files-found: warn
 
       - name: Report result
