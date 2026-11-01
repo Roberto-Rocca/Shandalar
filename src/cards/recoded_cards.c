@@ -1832,7 +1832,7 @@ int card_living_artifact(int player, int card, event_t event){
 			reason_for_trigger_controller == player
 		  ){
 			int trig = 0;
-			if( count_counters(player, card, -1) > 0 ){
+			if( count_counters(player, card, COUNTER_VITALITY) > 0 ){
 				trig = 1;
 			}
 			if( trig == 1 ){
@@ -1840,7 +1840,7 @@ int card_living_artifact(int player, int card, event_t event){
 					event_result |= 1+player;
 				}
 				else if(event == EVENT_RESOLVE_TRIGGER){
-						remove_counter(player, card, COUNTER_P1_P1);
+						remove_counter(player, card, COUNTER_VITALITY);
 						gain_life(player, 1);
 				}
 			}
