@@ -184,6 +184,15 @@ int card_jesters_cap(int player, int card, event_t event){
     return generic_activated_ability(player, card, event, GAA_UNTAPPED+GAA_NONSICK+GAA_CAN_TARGET+GAA_SACRIFICE_ME, 2, 0, 0, 0, 0, 0, 0, &td1, "TARGET_PLAYER");
 }
 
+/* Card-cost checks receive CSV ids, while the color API accepts internal ids. */
+static int get_color_by_csv_id(int player, int csv_id){
+    int internal_id = get_internal_card_id_from_csv_id(csv_id);
+    if( internal_id < 0 ){
+        return 0;
+    }
+    return get_color_by_internal_id(player, internal_id);
+}
+
 int get_updated_casting_cost_exc_trinisphere(int player, int card, event_t event, int cless){
 	// Seriously?
 
@@ -204,7 +213,7 @@ int get_updated_casting_cost_exc_trinisphere(int player, int card, event_t event
 		cless = c->req_colorless;
 	}
 
-	int clr = get_color_by_id(player, id);
+	int clr = get_color_by_csv_id(player, id);
 
     int i;
     for(i=0; i<2; i++){
@@ -321,7 +330,7 @@ int get_updated_casting_cost_exc_trinisphere(int player, int card, event_t event
 				}
 
 				if( get_id(i, count) == CARD_ID_EYE_OF_UGIN && i == player && has_subtype_by_id(id, SUBTYPE_ELDRAZI) && 
-					get_color_by_id(player, id) == COLOR_TEST_COLORLESS
+					get_color_by_csv_id(player, id) == COLOR_TEST_COLORLESS
 				  ){
 					cless-=2;
 				}
@@ -336,7 +345,7 @@ int get_updated_casting_cost_exc_trinisphere(int player, int card, event_t event
 					}	
 				}
 
-				if( get_id(i, count) == CARD_ID_GLOOM && (get_color_by_id(player, id) & COLOR_TEST_WHITE)  ){
+				if( get_id(i, count) == CARD_ID_GLOOM && (get_color_by_csv_id(player, id) & COLOR_TEST_WHITE)  ){
 					cless+=3;
 				}
 
