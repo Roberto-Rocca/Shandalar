@@ -57,7 +57,7 @@ jobs:
           set +e
           # Preserve diagnostics, but do not block on legacy warnings under modern GCC.
           make -C src -k -j2 \
-            COMMONFLAGS='-O2 -ggdb2 -march=i586 -mpreferred-stack-boundary=2 -fno-omit-frame-pointer -Wall -Wextra -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wshadow -W -Winline -Wno-unused-parameter -Wno-error -I.. -I.' \
+            COMMONFLAGS='-O2 -ggdb2 -march=i586 -mpreferred-stack-boundary=2 -fno-omit-frame-pointer -Wall -Wextra -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wshadow -W -Winline -Wno-unused-parameter -Wno-error -fcommon -I.. -I.' \
             CC=i686-w64-mingw32-gcc \
             CXX=i686-w64-mingw32-g++ \
             OBJCOPY=i686-w64-mingw32-objcopy \
