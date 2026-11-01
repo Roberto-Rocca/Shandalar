@@ -757,7 +757,7 @@ int card_mind_stone(int player, int card, event_t event){
     if(event == EVENT_ACTIVATE ){
         int choice = 0;
 		int ai_choice = 0;
-		if( ! paying_mana() && count_permanents_by_type(player, card, TYPE_LAND) > 6  &&
+		if( ! paying_mana() && count_permanents_by_type(player, TYPE_LAND) > 6  &&
 			has_mana_for_activated_ability(player, card, 2, 0, 0, 0, 0, 0) 
 		  ){
 			ai_choice = 1;
