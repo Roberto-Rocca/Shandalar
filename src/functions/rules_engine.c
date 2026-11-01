@@ -3107,9 +3107,12 @@ static void check_trap_conditions(int player, int card, event_t event){
 			if( has_subtype(affected_card_controller, affected_card, SUBTYPE_ZUBERA) ){
 				increase_trap_condition(affected_card_controller, TRAP_DEAD_ZUBERA_COUNT, 1);
 			}
+			/* Older card databases do not provide a Clue token ID. */
+#ifdef CARD_ID_CLUE
 			if( get_id(affected_card_controller, affected_card) == CARD_ID_CLUE && kill_code == KILL_SACRIFICE ){
 				increase_trap_condition(affected_card_controller, TRAP_CLUES_SACRIFICED, 1);
 			}
+#endif
 		}
 	}
 
