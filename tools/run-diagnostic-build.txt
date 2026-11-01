@@ -31,3 +31,6 @@ Through commit 05aac7c
 Diagnostic build request 11
 Batch: remove five duplicate link symbols from C/assembly overlap and duplicate mask state
 Through commit 703c014
+Diagnostic build request 12
+Batch: Aether Vial charge-counter API, preserve Animate Dead until original shared state mapping is verified
+Through commit 1f868b2
