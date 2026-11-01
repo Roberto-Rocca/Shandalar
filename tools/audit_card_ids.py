@@ -44,6 +44,32 @@ def inspect_csv(path):
             print("  Layout matches the header structure of historical Manalink.csv (not a conversion validation)")
 
 
+def normalize_card_name(value):
+    return re.sub(r"[^A-Z0-9]", "", value.upper())
+
+
+def crosscheck_card_names(symbols):
+    """Look for exact normalized card-name matches, without inferring an ID."""
+    result = {}
+    with CURRENT_CSV.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter=";")
+        if not {"Card Name", "Card ID", "Card#"}.issubset(reader.fieldnames or []):
+            return result
+        by_name = {}
+        for row in reader:
+            key = normalize_card_name(row.get("Card Name", ""))
+            if key:
+                by_name.setdefault(key, []).append({
+                    "card_name": row.get("Card Name", ""),
+                    "card_id_field": row.get("Card ID", ""),
+                    "card_number": row.get("Card#", ""),
+                })
+    for symbol in sorted(symbols):
+        key = normalize_card_name(symbol.removeprefix("CARD_ID_"))
+        result[symbol] = by_name.get(key, [])
+    return result
+
+
 def main():
     text = ID_HEADER.read_text(encoding="utf-8", errors="replace")
     definitions = {name: int(number) for name, number in DEFINITION_PATTERN.findall(text)}
@@ -80,7 +106,13 @@ def main():
                         "line": lineno,
                         "source": line.strip()[:240],
                     })
+    csv_matches = crosscheck_card_names(detail)
+    matched_symbols = [name for name, rows in csv_matches.items() if rows]
+    print(f"Exact normalized card-name matches in current CSV: {len(matched_symbols)} / {len(detail)}")
+    for name in matched_symbols:
+        print(f"  {name}: " + ", ".join(f"{row['card_name']} (CSV Card ID {row['card_id_field']})" for row in csv_matches[name][:4]))
     report = {
+        "csv_card_name_matches": csv_matches,
         "defined_ids": len(definitions),
         "duplicate_numeric_ids": duplicates,
         "unresolved_symbols": detail,
