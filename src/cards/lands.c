@@ -35,7 +35,7 @@ int card_dryad_arbor(int player, int card, event_t event){
 
 int card_forbidden_orchard(int player, int card, event_t event){
     if( event == EVENT_RESOLVE_ACTIVATION ){
-        generate_token_by_id(opp, CARD_ID_SPIRIT);
+        generate_token_by_id(opp, card, CARD_ID_SPIRIT);
     }
     return mana_producer(player, card, event);
 }
@@ -55,7 +55,7 @@ int karoo_attempted_fix(int player, int card, event_t event, int color1, int col
         tap_card(player, card);
     }
     else if( event == EVENT_CAST_SPELL && affect_me(player, card) ){
-        if( count_permanents_by_type(player, card, TYPE_LAND) == 0 ){
+        if( count_permanents_by_type(player, TYPE_LAND) == 0 ){
             ai_modifier -= 100;
         }
         else{
@@ -64,7 +64,7 @@ int karoo_attempted_fix(int player, int card, event_t event, int color1, int col
         }
     }
     else if( comes_into_play(player, card, event) > 0 ){
-        if( player == AI && count_permanents_by_type(player, card, TYPE_LAND) > 1 ){
+        if( player == AI && count_permanents_by_type(player, TYPE_LAND) > 1 ){
             instance->state |= STATE_CANNOT_TARGET;
         }
         select_target(player, card, &td, "Choose a land to bounce", NULL);
