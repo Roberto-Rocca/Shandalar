@@ -480,7 +480,7 @@ int clone_legacy(int player, int card, event_t event){
 					card_instance_t *orig = get_card_instance( instance->targets[0].player, instance->targets[0].card );
 					orig->targets[10].player = 66;
 					if( instance->targets[1].card == CARD_ID_EVIL_TWIN ){
-						int effect = generate_token_by_id(player, CARD_ID_EVIL_TWIN_EFFECT);
+						int effect = generate_reserved_token_by_id(player, CARD_ID_EVIL_TWIN_EFFECT);
 						card_instance_t *twin = get_card_instance(player, effect);
 						twin->targets[9].player = player;
 						twin->targets[9].card = card;
