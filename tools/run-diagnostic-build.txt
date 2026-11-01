@@ -25,3 +25,6 @@ Through commit 8633ed7
 Diagnostic build request 9
 Batch: Solemn Simulacrum death/ETB, Farseek subtype filter, attack legality triggers, double strike state, Infect icon
 Through commit 6f951a7
+Diagnostic build request 10
+Purpose: test legacy -fcommon linking, separate duplicate tentative globals from genuine missing external engine symbols
+Through commit 05aac7c
