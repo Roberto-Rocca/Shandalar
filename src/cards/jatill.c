@@ -365,10 +365,10 @@ int card_magus_of_the_scroll(int player, int card, event_t event){
 				new_default_test_definition(&this_test, TYPE_ANY, msg);
 				int selected = new_select_a_card(player, player, TUTOR_FROM_HAND, 1, AI_MIN_VALUE, -1, &this_test);
 				if( player == AI ){
-					reveal_card(HUMAN, player, card, player, selected, "AI Names...", 0);
+					reveal_card(player, card, player, selected);
 				}
 				int sel2 = get_random_card_in_hand(player);
-				reveal_card(player, player, card, player, sel2, "You revealed...", 0);
+				reveal_card(player, card, player, sel2);
 				if( sel2 == selected ){
 					damage_creature_or_player(player, card, event, 2);
 				}
