@@ -10,3 +10,6 @@ Through commit 6d3c19a
 Diagnostic build request 4
 Batch: Bribery creature filter, Soul Net mana payer, Living Artifact counter query, Fire Imp target; prior ID and reanimation signature fixes
 Through commit 181a686
+Diagnostic build request 5
+Batch: Nevinyrral Disk types, Orcish Catapult counters, Willow Satyr control, Living Artifact vitality counters
+Through commit ab66fef
