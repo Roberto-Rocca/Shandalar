@@ -94,7 +94,9 @@ int card_ogre_arsonist(int player, int card, event_t event){
 }
 
 int card_fire_imp(int player, int card, event_t event){
-    return cip_damage_creature(player, card, event, 2);
+    target_definition_t td;
+    default_target_definition(player, card, &td, TYPE_CREATURE);
+    return cip_damage_creature(player, card, event, &td, "Select target creature", 2);
 }
 
 int card_balduvian_horde(int player, int card, event_t event){
