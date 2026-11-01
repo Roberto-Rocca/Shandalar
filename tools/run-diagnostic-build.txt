@@ -28,3 +28,6 @@ Through commit 6f951a7
 Diagnostic build request 10
 Purpose: test legacy -fcommon linking, separate duplicate tentative globals from genuine missing external engine symbols
 Through commit 05aac7c
+Diagnostic build request 11
+Batch: remove five duplicate link symbols from C/assembly overlap and duplicate mask state
+Through commit 703c014
