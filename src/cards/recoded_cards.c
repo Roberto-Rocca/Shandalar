@@ -649,7 +649,7 @@ int card_pentavite(int player, int card, event_t event ){
 			int trig = 0;
 
 			if( is_what(trigger_cause_controller, trigger_cause, TYPE_ENCHANTMENT) &&
-				is_aura(trigger_cause_controller, trigger_cause, 1) 
+				has_subtype(trigger_cause_controller, trigger_cause, SUBTYPE_AURA) 
 			  ){
 				card_instance_t *instance = get_card_instance(player, card);
 				if( instance->targets[0].player == player && instance->targets[0].card == card ){
