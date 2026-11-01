@@ -13,3 +13,6 @@ Through commit 181a686
 Diagnostic build request 5
 Batch: Nevinyrral Disk types, Orcish Catapult counters, Willow Satyr control, Living Artifact vitality counters
 Through commit ab66fef
+Diagnostic build request 6
+Batch: Evil Twin returning token API; previous grouped fixes validated by build 41324254448
+Through commit bd729f7
