@@ -43,3 +43,6 @@ Through commit 91e3483
 Diagnostic build request 15
 Batch: restore get_forbid_activation_flag from existing three-nibble ability suppression state, avoiding edits to working card implementations
 Through commit 8f83e1e
+Diagnostic build request 16
+Batch: CSV-to-internal card ID color adapter for cost modifiers; preserve Gloom and Illusions of Grandeur behavior
+Through commit 9593b38
