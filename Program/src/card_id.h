@@ -15644,7 +15644,9 @@ typedef enum
   CARD_ID_ZOMBIE_WIZARD                 =15717,
   /* Provisional post-legacy IDs. No matching .dat records yet; diagnostic build only. */
   CARD_ID_KOZILEKS_RETURN               =20000,
-  CARD_ID_PRIZED_AMALGAM                =20001
+  CARD_ID_PRIZED_AMALGAM                =20001,
+  /* Historical CSV identifies Wastes as 15719; unused in this header. */
+  CARD_ID_WASTES                        =15719
 } card_id_t;
 
 #endif
