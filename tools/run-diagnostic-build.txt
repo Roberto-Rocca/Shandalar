@@ -55,3 +55,6 @@ Through commit 01bdf36
 Diagnostic build request 19
 Batch: replace missing is_aura in Pentavite handler with explicitly defined SUBTYPE_AURA subtype check
 Through commit 9bc02d7
+Diagnostic build request 20
+Batch: link original Time Walk and Demonic Tutor entrypoints from documented original Magic.exe addresses; diagnostic linking only, no gameplay validation
+Through commit 1a3035c
