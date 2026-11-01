@@ -1298,19 +1298,21 @@ int card_orcish_catapult(int player, int card, event_t event){
 int card_volcanic_eruption(int player, int card, event_t event){
     target_definition_t td;
     default_target_definition(player, card, &td, TYPE_LAND);
-	
+    td.required_subtype = SUBTYPE_MOUNTAIN;
+
     card_instance_t *instance = get_card_instance(player, card);
 
 	if( event == EVENT_CAN_CAST && has_mana_multi(player, 1, 0, 3, 0, 0, 0) ){
 		if( player == AI ){
-			if( check_battlefield_for_targettable_subtype(player, card, 1-player, TYPE_LAND, SUBTYPE_MOUNTAIN) &&
+            td.allowed_controller = 1-player;
+			if( can_target(&td) &&
 				has_mana(player, COLOR_COLORLESS, 1)
 			  ){
 				return ! check_battlefield_for_id(2, CARD_ID_GADDOCK_TEEG);
 			}
 		}
 		else{
-			if( check_battlefield_for_targettable_subtype(player, card, 2, TYPE_LAND, SUBTYPE_MOUNTAIN) ){
+			if( can_target(&td) ){
 				return ! check_battlefield_for_id(2, CARD_ID_GADDOCK_TEEG);
 			}
 		}
