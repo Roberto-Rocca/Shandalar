@@ -2363,7 +2363,7 @@ int card_animate_dead(int player, int card, event_t event){
 		if( selected != -1 ){
 			hack_animate_dead_player = player;
 			hack_animate_dead_card = card;
-			reanimate_permanent(player, card, instance->targets[0].player, selected, 9, 0);
+			reanimate_permanent(player, card, instance->targets[0].player, selected, 9);
 		}
 		else{
 			kill_card(player, card, KILL_SACRIFICE);
