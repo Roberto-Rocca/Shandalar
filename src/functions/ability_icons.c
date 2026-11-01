@@ -81,9 +81,7 @@ int get_ability_image(int player, int card, int result){
 	}
 	/* 1<<24: Infect.  Appears only in the Scars of Mirrodin block (67 cards),
 	 * but hey, that's the current one! */
-	if ((instance->regen_status & KEYWORD_INFECT)
-		&& !(instance->targets[14].card > 0
-			 && (instance->targets[14].card & SF_INFECT_REMOVED))){
+	if (instance->regen_status & KEYWORD_INFECT){
 		result |= 0x01000000;
 	}
 	/* 1<<25: Indestructible.  Evergreen, popular, and high game impact,
