@@ -1840,7 +1840,7 @@ int card_living_artifact(int player, int card, event_t event){
 					event_result |= 1+player;
 				}
 				else if(event == EVENT_RESOLVE_TRIGGER){
-						remove_counter(player, card);
+						remove_counter(player, card, COUNTER_P1_P1);
 						gain_life(player, 1);
 				}
 			}
