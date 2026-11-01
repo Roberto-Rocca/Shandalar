@@ -865,6 +865,7 @@ int m10_lands(int player, int card, event_t event, int, int);
 int boost_creature_by_color(int player, int card, event_t event, int, int, int, int, bct_t flags);
 void modify_pt_and_abilities(int player, int card, event_t event, int, int, int);
 void nice_creature_to_sacrifice(int player, int card);
+int get_forbid_activation_flag(int player, int card);
 int can_use_activated_abilities(int player, int card);
 int can_use_activated_abilities_by_instance(card_instance_t* instance);
 int can_produce_mana(int player, int card);
