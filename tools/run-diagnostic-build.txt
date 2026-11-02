@@ -118,3 +118,6 @@ Through commit f55d487
 Diagnostic build request 40
 Wall of Roots: use existing COUNTER_M0_M1 with add_counters; expect zero duplicates and seven unresolved symbols
 Through commit 77f5d6f
+Diagnostic build request 41
+Isochron Scepter: replace missing can_legally_play with can_legally_play_iid, documented ID-semantics test needed
+Through commit 417808d
