@@ -79,3 +79,6 @@ Through commit 831b25b
 Diagnostic build request 27
 Batch: prefer recoded_cards Time Walk by renaming legacy duplicate only (body preserved); compare duplicate counts
 Through commit 609caac
+Diagnostic build request 28
+Batch: fix audit for resolved Time Walk and prioritize recoded Rock Hydra while retaining legacy implementation
+Through commit f2c61cf
