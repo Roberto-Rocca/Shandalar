@@ -68,3 +68,9 @@ All items remain **untested in gameplay**. The batch owner selection is temporar
 - Replaced missing `can_legally_play(player, instance->info_slot)` with existing `can_legally_play_iid(player, instance->info_slot)` in `src/cards/artifacts.c`.
 - **Semantic assumption requiring verification:** the identifier returned by `new_global_tutor(..., TUTOR_FROM_HAND, TUTOR_RFG, ...)` and stored in `info_slot` is an internal card ID, not a CSV ID. Verify by inspecting implementation and by testing imprinted instants under casting restrictions.
 - Test artifact imprint, legal casting, activation with two mana, copy on stack, and effects that prohibit casting. This change fixes an unresolved reference only if the ID assumption holds.
+
+## 2026-11-02 — Unmask reconstruction
+
+- Replaced undefined legacy `effect_coercion()` with `default_ec_definition()` + `new_effect_coercion()` in `card_unmask()`.
+- Test filter `TYPE_LAND` / `DOESNT_MATCH`, reveal entire target hand, player choice, discarding exactly one **nonland** card; no discard when hand contains only lands; spell alternative pitch cost and cancellation.
+- Compare actual behavior with oracle/rules and upstream; semantic validation remains pending.
