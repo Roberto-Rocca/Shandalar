@@ -88,3 +88,6 @@ Through commit ba180df
 Diagnostic build request 30
 Batch: prefer recoded Raise Dead, retaining Unlimited version for regression comparison
 Through commit 6ad6de1
+Diagnostic build request 31
+Batch: isolate all card handlers duplicated with recoded_cards.c in one build; preserve originals and export regression test register
+Through commit fe34c89
