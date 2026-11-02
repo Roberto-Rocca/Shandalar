@@ -62,3 +62,9 @@ All items remain **untested in gameplay**. The batch owner selection is temporar
 
 - Replaced unavailable `add_0_minus1_counters(player, card, 1)` with `add_counters(player, card, COUNTER_M0_M1, 1)`, using the existing exact `COUNTER_M0_M1` enum in `src/defs.h`.
 - Verify -0/-1 counter accumulation, toughness updates, mana timing and once-per-turn activation, especially across turn boundaries. Compilation is not gameplay validation.
+
+## 2026-11-02 — Isochron Scepter legality-check correction
+
+- Replaced missing `can_legally_play(player, instance->info_slot)` with existing `can_legally_play_iid(player, instance->info_slot)` in `src/cards/artifacts.c`.
+- **Semantic assumption requiring verification:** the identifier returned by `new_global_tutor(..., TUTOR_FROM_HAND, TUTOR_RFG, ...)` and stored in `info_slot` is an internal card ID, not a CSV ID. Verify by inspecting implementation and by testing imprinted instants under casting restrictions.
+- Test artifact imprint, legal casting, activation with two mana, copy on stack, and effects that prohibit casting. This change fixes an unresolved reference only if the ID assumption holds.
