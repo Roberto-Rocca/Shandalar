@@ -142,3 +142,6 @@ Through commit 68fb964
 Diagnostic build request 48
 Pre-menu Windows exception 0xc0000005 at 0x0200A9E9: collect PE headers, debug lookup and disassembly; do not change linker addresses without evidence.
 Through commit b9e630b
+Diagnostic build request 49
+Windows pre-menu crash 0xc0000005 at 0x0200a9e9: match original working ManalinkEh.dll PE DllCharacteristics=0; compare runtime behavior in isolated test copy only.
+Through commit c7f7ed9
