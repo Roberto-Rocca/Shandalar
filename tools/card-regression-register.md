@@ -50,3 +50,10 @@ The automated source-candidate scan completed on 214 source/header files. Its ca
 | Black sorcery effect | `effect_coercion` | Compare effect semantics with `new_effect_coercion` and its parameter structs |
 
 All items remain **untested in gameplay**. The batch owner selection is temporary in CI and requires dispatch/EXE validation.
+
+## 2026-11-02 — targeted Dryad Arbor source correction
+
+- Removed the call to undefined `colored_artifact()` from `card_dryad_arbor()` in `src/cards/lands.c`. Dryad Arbor is a green land creature, not an artifact.
+- Preserved `mana_producer_fixed(..., COLOR_GREEN)`; no other event handling changed.
+- **Validate in-game**: green color, land + creature types, summoning sickness, green mana production, interactions with artifact-only effects. Card data must be checked separately.
+- Upstream cross-check: `ShandalarMagic/Shandalar` retains this unresolved call, so this is a reasoned corrective divergence, **not** a verbatim upstream reconstruction.
