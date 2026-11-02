@@ -94,6 +94,7 @@ jobs:
             card-id-audit.json
             linker-symbol-audit.json
             linker-symbol-audit.csv
+            linker-duplicate-file-pairs.csv
           if-no-files-found: warn
 
       - name: Report result
