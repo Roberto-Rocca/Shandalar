@@ -133,3 +133,6 @@ Through commit 608f96e
 Diagnostic build request 45
 Fork reconstruction confirmed: 0 duplicate, 4 undefined in run 41437714797. Fix SyntaxError in EXE provenance audit and retain full artifacts.
 Through commit 828227d
+Diagnostic build request 46
+Single batched check: Goblin Shrine/Caves targeted aura; Animate Dead state variables; Illusionary Mask damage handler. Expected zero duplicates and zero unresolved; ABI/gameplay tests still required.
+Through commit f765e14
