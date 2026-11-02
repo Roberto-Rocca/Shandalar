@@ -91,3 +91,6 @@ Through commit 6ad6de1
 Diagnostic build request 31
 Batch: isolate all card handlers duplicated with recoded_cards.c in one build; preserve originals and export regression test register
 Through commit fe34c89
+Diagnostic build request 32
+Repair malformed YAML escaped newline after mass-run no-job failures
+Through commit d60e047
