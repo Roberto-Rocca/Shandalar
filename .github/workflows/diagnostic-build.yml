@@ -108,6 +108,26 @@ jobs:
           test -s src/ManalinkEh.dll
           grep -q "pei-i386" pe-inspection.txt
 
+      - name: Diagnose pre-menu crash address
+        if: success()
+        shell: bash
+        run: |
+          set -eu
+          {
+            echo "Reported Windows exception: 0xc0000005 at 0x0200a9e9 (module unknown)"
+            echo "The reported address is meaningful only if the DLL was actually loaded at 0x02000000."
+            echo "=== DLL headers, image base and imports ==="
+            i686-w64-mingw32-objdump -p src/ManalinkEh.dll
+            echo "=== DLL section table ==="
+            i686-w64-mingw32-objdump -h src/ManalinkEh.dll
+            echo "=== Symbols near reported address (separate debug file) ==="
+            i686-w64-mingw32-nm -n src/ManalinkEh.dbg | grep -i -B 12 -A 12 '0200a9e9' || true
+            echo "=== DWARF location for reported address ==="
+            i686-w64-mingw32-addr2line -e src/ManalinkEh.dbg -f -C 0x0200a9e9 || true
+            echo "=== Disassembly near reported address ==="
+            i686-w64-mingw32-objdump -d -C --start-address=0x0200a980 --stop-address=0x0200aa60 src/ManalinkEh.dbg || true
+          } > crash-address-diagnostic.txt 2>&1
+
       - name: Upload compiled DLL and debug symbols
         if: success()
         uses: actions/upload-artifact@v4
@@ -117,6 +137,7 @@ jobs:
             src/ManalinkEh.dll
             src/ManalinkEh.dbg
             pe-inspection.txt
+            crash-address-diagnostic.txt
           if-no-files-found: error
 
       - name: Upload diagnostic log
