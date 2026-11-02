@@ -3778,7 +3778,8 @@ int card_purelace(int player, int card, event_t event){
 
 // Raging River --> hardcoded, for now. Or Korath, you could do this if you want
 
-int card_raise_dead(int player, int card, event_t event){
+/* Legacy Raise Dead implementation retained; recoded_cards.c owns card_raise_dead. */
+int card_raise_dead_legacy_unlimited(int player, int card, event_t event){
 	if( ! IS_GS_EVENT(player, card, event) ){
 		return 0;
 	}
