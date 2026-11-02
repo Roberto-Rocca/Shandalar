@@ -90,6 +90,7 @@ jobs:
         run: |
           if [ -f build.log ]; then
             python3 tools/audit_linker_symbols.py build.log linker-symbol-audit.json
+            python3 tools/audit_unresolved_calls.py build.log unresolved-call-sites.csv
             # The batch report captures recoded ownership; the older
             # diagnostic expects duplicate errors and is not applicable here.
           fi
@@ -110,6 +111,7 @@ jobs:
             recoded-batch-renames.csv
             experimental-card-ownership.csv
             experimental-helper-ownership.csv
+            unresolved-call-sites.csv
           if-no-files-found: warn
 
       - name: Report result
