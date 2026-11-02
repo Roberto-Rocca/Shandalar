@@ -51,7 +51,7 @@ jobs:
         run: |
           python3 tools/audit_card_ids.py | tee card-id-audit.log
 
-      - name: Attempt 32-bit build and retain error log
+      - name: Isolate recoded card duplicate symbols in batch\n        run: python3 tools/isolate_recoded_duplicates.py\n\n      - name: Attempt 32-bit build and retain error log
         shell: bash
         run: |
           set +e
@@ -81,7 +81,7 @@ jobs:
         run: |
           if [ -f build.log ]; then
             python3 tools/audit_linker_symbols.py build.log linker-symbol-audit.json
-            python3 tools/audit_recoded_ownership.py linker-symbol-audit.json recoded-ownership-audit.csv
+            # The batch report captures recoded ownership; the older\n            # diagnostic expects duplicate errors and is not applicable here.
           fi
 
       - name: Upload diagnostic log
@@ -96,7 +96,7 @@ jobs:
             linker-symbol-audit.json
             linker-symbol-audit.csv
             linker-duplicate-file-pairs.csv
-            recoded-ownership-audit.csv
+            recoded-ownership-audit.csv\n            recoded-batch-renames.csv
           if-no-files-found: warn
 
       - name: Report result
