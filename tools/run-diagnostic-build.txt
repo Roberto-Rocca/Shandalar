@@ -127,3 +127,6 @@ Through commit 87842c8a
 Diagnostic build request 43
 Audit all five unresolved EXE-dependent references and source declarations, without unverified linker address aliases
 Through commit 0bf2565
+Diagnostic build request 44
+Reconstructed Fork from original DLL disassembly, replacing card_fork_orig with twincast and targets[2].player; expect four missing symbols
+Through commit 608f96e
