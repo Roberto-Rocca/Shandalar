@@ -51,7 +51,10 @@ jobs:
         run: |
           python3 tools/audit_card_ids.py | tee card-id-audit.log
 
-      - name: Isolate recoded card duplicate symbols in batch\n        run: python3 tools/isolate_recoded_duplicates.py\n\n      - name: Attempt 32-bit build and retain error log
+      - name: Isolate recoded card duplicate symbols in batch
+        run: python3 tools/isolate_recoded_duplicates.py
+
+      - name: Attempt 32-bit build and retain error log
         shell: bash
         run: |
           set +e
