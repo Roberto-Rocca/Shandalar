@@ -70,3 +70,6 @@ Through commit bc76cfd
 Diagnostic build request 24
 Batch: read-only duplicate and unresolved symbol audit, no gameplay source changes
 Through commit 0c4746c
+Diagnostic build request 25
+Batch: group 303 duplicate symbols by source-file pair, diagnostic only
+Through commit 8a500b5
