@@ -29,3 +29,24 @@ objdump -p ManalinkEh.dll
 ```
 
 These checks are informational only. No gameplay modifications or arbitrary EXE addresses were introduced.
+
+## Fork: verified assembly-level evidence from original DLL
+
+COFF symbol `_card_fork` is reported at section-relative `0x003b38a0`. Because the DLL `.text` section begins at `0x02001000`, its **actual virtual address** is `0x023b48a0` (not `0x023b38a0` and not an address in `Magic.exe`).
+
+Static x86 disassembly of `ManalinkEh.dll` from the supplied archive, starting at `0x023b48a0`, shows:
+
+- `0x023b48df: call 0x02444be0 <_twincast>` in the normal event path.
+- `0x023b4924: call 0x02444be0 <_twincast>` on the special `event == 0x36` path.
+- `0x023b4938`–`0x023b4943`: `_kill_card` after another event path (`event == 0x71`).
+- The fifth argument to `twincast()` is a pointer into `card_instance_t` at offset `0x88`, which needs a verified C field mapping before it can be reconstructed.
+- The original DLL function contains **no call to a symbol named `card_fork_orig`**; the current source's dependency should not be resolved by assigning an arbitrary original-EXE address. Rebuild its event logic from `twincast()` after mapping the instance field.
+
+Reproduce locally:
+
+```sh
+objdump -t ManalinkEh.dll | grep -F '_card_fork'
+objdump -d --start-address=0x023b48a0 --stop-address=0x023b4970 ManalinkEh.dll
+```
+
+**Status:** provenance established; C reconstruction not yet committed. Do not mistake the COFF section-relative symbol value for a virtual address.
