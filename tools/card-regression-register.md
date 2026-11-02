@@ -80,3 +80,10 @@ All items remain **untested in gameplay**. The batch owner selection is temporar
 - Removed undefined `card_fork_orig` and reconstructed the original `twincast()` call using pointer `&instance->targets[2].player` (COFF `_card_fork` offset `0x88`; struct `targets` begins at `0x74`).
 - Preserved original `EVENT_SET_COLOR` red marking, `EVENT_RESOLVE_SPELL` kill and this fork's explicit prohibition on copying creature spells.
 - Test casting against instants/sorceries, target/retarget choices, copied spells resolving, fizzling, colors and stack behavior; assembly-level evidence does not replace gameplay validation.
+
+## 2026-11-02 — four-symbol batched repair (experimental)
+
+- **Goblin Shrine / Goblin Caves**: replaced missing `card_goblin_shrine_exe` with `targeted_aura(... TYPE_LAND ...)` in the two affected paths, guided by original `_card_goblin_shrine` disassembly (the original calls `_targeted_aura`). Test enchant-target legality, Mountain-only bonus, leaving-play damage, and Goblin Caves' toughness bonus. Note: targeting restrictions may need further adjustment to match original behavior.
+- **Animate Dead**: replaced two unresolved `extern int hack_animate_dead_*` declarations with initialized DLL-local definitions. **Risk:** shared-state interaction with the original EXE is not yet established. Test opponent graveyard choice, reanimation attachments, transitions, and creature death/sacrifice; zero unresolved does not demonstrate ABI correctness.
+- **Illusionary Mask**: replaced missing `damage_dealt_to_me` with existing `damage_dealt_to_me_arbitrary(..., player, card)` so damage bookkeeping uses the legacy effect as triggering owner. **Risk:** inspect the old/new damage event timing and targets[6]/[7] side effects; verify when the masked card turns face up and interaction with damage/tapping/attacking.
+- These changes are committed together for **one linker build only**. Treat them as provisional until runtime regression testing.
