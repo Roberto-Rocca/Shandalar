@@ -14,6 +14,7 @@ from pathlib import Path
 LOG = Path(sys.argv[1] if len(sys.argv) > 1 else "build.log")
 REPORT = Path(sys.argv[2] if len(sys.argv) > 2 else "linker-symbol-audit.json")
 CSV_REPORT = REPORT.with_suffix(".csv")
+PAIR_REPORT = REPORT.with_name("linker-duplicate-file-pairs.csv")
 line_pattern = re.compile(
     r"(?P<file>[^\s:]+\.(?:c|cpp|asm)):(?P<line>\d+): "
     r"multiple definition of [`'](?P<symbol>[^`']+)[`']; "
@@ -66,6 +67,24 @@ with CSV_REPORT.open("w", encoding="utf-8", newline="") as handle:
                 pair["conflict"]["file"], pair["conflict"]["line"],
                 pair["first"]["file"], pair["first"]["line"]
             ])
+# Rank file pairs to choose small, reviewable fixes, without selecting an implementation.
+file_pairs = {}
+for item in duplicates:
+    for location in item["locations"]:
+        source_pair = tuple(sorted([
+            location["first"]["file"].replace("\\\\", "/").split("/src/")[-1],
+            location["conflict"]["file"].replace("\\\\", "/").split("/src/")[-1],
+        ]))
+        file_pairs.setdefault(source_pair, set()).add(item["symbol"])
+with PAIR_REPORT.open("w", encoding="utf-8", newline="") as handle:
+    writer = csv.writer(handle)
+    writer.writerow(["file_a", "file_b", "duplicate_count", "symbols"])
+    for pair, symbols in sorted(file_pairs.items(), key=lambda row: (-len(row[1]), row[0])):
+        writer.writerow([pair[0], pair[1], len(symbols), ";".join(sorted(symbols))])
+print("Largest duplicate file pairs:")
+for pair, symbols in sorted(file_pairs.items(), key=lambda row: (-len(row[1]), row[0]))[:12]:
+    print(f"  {len(symbols):3} {pair[0]} / {pair[1]}")
+print(f"Pair report: {PAIR_REPORT}")
 print(f"Duplicate symbols: {len(duplicates)}")
 print(f"Unresolved symbols: {len(unresolved)}")
 print("Duplicate symbol categories:", dict(Counter(item["category"] for item in duplicates)))
