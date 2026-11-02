@@ -92,6 +92,7 @@ jobs:
             python3 tools/audit_linker_symbols.py build.log linker-symbol-audit.json
             python3 tools/audit_unresolved_calls.py build.log unresolved-call-sites.csv
             python3 tools/audit_unresolved_candidates.py
+            python3 tools/audit_exe_symbol_provenance.py
             # The batch report captures recoded ownership; the older
             # diagnostic expects duplicate errors and is not applicable here.
           fi
@@ -114,6 +115,7 @@ jobs:
             experimental-helper-ownership.csv
             unresolved-call-sites.csv
             unresolved-symbol-candidates.csv
+            exe-symbol-provenance.csv
           if-no-files-found: warn
 
       - name: Report result
