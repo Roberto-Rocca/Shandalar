@@ -33,3 +33,20 @@ The CI artifact `recoded-batch-renames.csv` from the bulk diagnostic build lists
 - Legacy handlers are preserved in repository sources; batch names are altered in the CI checkout only.
 - Check `CSV/Magic.exe.Cards.csv`, Manalink dispatch IDs and the patched Magic.exe addresses before declaring a card fixed.
 - Runtime validation remains pending for every card listed here.
+
+## Unresolved-symbol regression targets (run 41420176092)
+
+The automated source-candidate scan completed on 214 source/header files. Its candidate list is **not** evidence that similarly named functions are ABI-compatible.
+
+| Card / subsystem | Missing symbol | What to check before patching |
+| --- | --- | --- |
+| Wall of Roots | `add_0_minus1_counters` | Uses 0/-1 counters rather than -1/-1 counters; validate exact counter type and once-per-turn mana activation |
+| Dryad Arbor | `colored_artifact` | Suspicious call: Dryad Arbor is a green land creature, **not an artifact**; review intent rather than inventing an alias |
+| Animate Dead | `hack_animate_dead_player`, `hack_animate_dead_card` | Locate original storage and lifetime before replacing globals |
+| Goblin Shrine | `card_goblin_shrine_exe` | Confirm EXE entry point and correct patched binary before any linker mapping |
+| Fork | `card_fork_orig` | Confirm original dispatch and copied spell behavior before mapping |
+| Other card damage interactions | `damage_dealt_to_me` | Compare existing `damage_dealt_to_me_arbitrary` signature and trigger semantics |
+| Artifact/card play effect | `can_legally_play` | Determine whether stored identifier is internal card ID, CSV ID, or something else before using `can_legally_play_iid` |
+| Black sorcery effect | `effect_coercion` | Compare effect semantics with `new_effect_coercion` and its parameter structs |
+
+All items remain **untested in gameplay**. The batch owner selection is temporary in CI and requires dispatch/EXE validation.
