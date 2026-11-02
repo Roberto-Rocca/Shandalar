@@ -167,15 +167,31 @@ int card_obliterate(int player, int card, event_t event){
 }
 
 int card_fork(int player, int card, event_t event){
-    int result =  card_fork_orig(player, card, event);
-    if(event == EVENT_CAN_CAST ){
-        if( result == 0 ){
-            return 0;
-        }
+    /* Reconstructed from the original ManalinkEh.dll's _card_fork:
+     * the fifth twincast argument points to card_instance_t offset 0x88,
+     * which is targets[2].player in src/defs.h. */
+    card_instance_t* instance = get_card_instance(player, card);
+    int result;
+
+    if (event == EVENT_SET_COLOR &&
+        instance->targets[2].player != -1 &&
+        instance->targets[2].player == affected_card &&
+        player == affected_card_controller){
+        event_result = COLOR_TEST_RED;
+    }
+
+    result = twincast(player, card, event, NULL, &instance->targets[2].player);
+
+    /* Preserve the extra noncreature restriction in this fork's source. */
+    if (event == EVENT_CAN_CAST && result){
         card_data_t* card_d = get_card_data(card_on_stack_controller, card_on_stack);
-        if( card_d->type & TYPE_CREATURE ){
+        if (card_d->type & TYPE_CREATURE){
             return 0;
         }
+    }
+
+    if (event == EVENT_RESOLVE_SPELL){
+        kill_card(player, card, KILL_DESTROY);
     }
     return result;
 }
