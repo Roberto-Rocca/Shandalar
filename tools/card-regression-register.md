@@ -74,3 +74,9 @@ All items remain **untested in gameplay**. The batch owner selection is temporar
 - Replaced undefined legacy `effect_coercion()` with `default_ec_definition()` + `new_effect_coercion()` in `card_unmask()`.
 - Test filter `TYPE_LAND` / `DOESNT_MATCH`, reveal entire target hand, player choice, discarding exactly one **nonland** card; no discard when hand contains only lands; spell alternative pitch cost and cancellation.
 - Compare actual behavior with oracle/rules and upstream; semantic validation remains pending.
+
+## 2026-11-02 — Fork binary reconstruction
+
+- Removed undefined `card_fork_orig` and reconstructed the original `twincast()` call using pointer `&instance->targets[2].player` (COFF `_card_fork` offset `0x88`; struct `targets` begins at `0x74`).
+- Preserved original `EVENT_SET_COLOR` red marking, `EVENT_RESOLVE_SPELL` kill and this fork's explicit prohibition on copying creature spells.
+- Test casting against instants/sorceries, target/retarget choices, copied spells resolving, fizzling, colors and stack behavior; assembly-level evidence does not replace gameplay validation.
