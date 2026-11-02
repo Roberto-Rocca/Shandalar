@@ -28,7 +28,8 @@ int karoo(int player, int card, event_t event, int color1, int color2, int ai_ca
 }
 
 int card_dryad_arbor(int player, int card, event_t event){
-    colored_artifact(player, card, event);
+    /* Dryad Arbor is a green land creature, not an artifact. Its type and
+     * color belong to card data; retain its green mana production here. */
     return mana_producer_fixed(player, card, event, COLOR_GREEN);
 }
 
