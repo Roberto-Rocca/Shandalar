@@ -57,6 +57,9 @@ jobs:
       - name: Experimentally isolate remaining card duplicates
         run: python3 tools/isolate_remaining_card_duplicates.py
 
+      - name: Isolate remaining shared helper symbols
+        run: python3 tools/isolate_remaining_helpers.py
+
       - name: Attempt 32-bit build and retain error log
         shell: bash
         run: |
@@ -106,6 +109,7 @@ jobs:
             recoded-ownership-audit.csv
             recoded-batch-renames.csv
             experimental-card-ownership.csv
+            experimental-helper-ownership.csv
           if-no-files-found: warn
 
       - name: Report result
