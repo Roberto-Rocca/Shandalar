@@ -13,7 +13,6 @@ names = (
 )
 files = sorted(p for p in Path("src").rglob("*")
                if p.suffix.lower() in (".c", ".h", ".asm", ".lds"))
-             )
 linker = Path("src/manalink.lds").read_text(errors="replace")
 with Path("exe-symbol-provenance.csv").open("w", newline="", encoding="utf-8") as out:
     writer = csv.writer(out)
