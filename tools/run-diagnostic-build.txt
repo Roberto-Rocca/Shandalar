@@ -109,3 +109,6 @@ Through commit 7a279f6
 Diagnostic build request 37
 Zero duplicate symbols confirmed in run 41418922202; collect precise call sites for nine unresolved symbols
 Through commit 8be572d
+Diagnostic build request 38
+Source inventory and candidate ranking for the nine unresolved symbols; no guessed executable address or gameplay edits
+Through commit 3f5eaa5
