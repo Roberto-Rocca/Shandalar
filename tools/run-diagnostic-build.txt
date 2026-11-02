@@ -85,3 +85,6 @@ Through commit f2c61cf
 Diagnostic build request 29
 Batch: prefer recoded Volcanic Eruption, retain original Unlimited implementation for behavior comparison
 Through commit ba180df
+Diagnostic build request 30
+Batch: prefer recoded Raise Dead, retaining Unlimited version for regression comparison
+Through commit 6ad6de1
