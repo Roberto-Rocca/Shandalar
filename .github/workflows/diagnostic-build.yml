@@ -81,7 +81,8 @@ jobs:
         run: |
           if [ -f build.log ]; then
             python3 tools/audit_linker_symbols.py build.log linker-symbol-audit.json
-            # The batch report captures recoded ownership; the older\n            # diagnostic expects duplicate errors and is not applicable here.
+            # The batch report captures recoded ownership; the older
+            # diagnostic expects duplicate errors and is not applicable here.
           fi
 
       - name: Upload diagnostic log
@@ -96,7 +97,8 @@ jobs:
             linker-symbol-audit.json
             linker-symbol-audit.csv
             linker-duplicate-file-pairs.csv
-            recoded-ownership-audit.csv\n            recoded-batch-renames.csv
+            recoded-ownership-audit.csv
+            recoded-batch-renames.csv
           if-no-files-found: warn
 
       - name: Report result
