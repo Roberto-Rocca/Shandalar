@@ -26,6 +26,17 @@ Historical supporting sources:
 
 Caveat: historical discussions also note some recoded implementations were not enabled in dispatch. This is a *default preference*, not proof that every function is runtime-correct. Verify the executable and dispatch mapping prior to adopting a replacement.
 
+## Retrospective precedence audit (2 November 2026)
+
+Rechecked both definitions, not merely linker names:
+- `card_rock_hydra`: recoded wrapper handles X counters and delegates remaining events to the original EXE; the Unlimited version implements the card independently. **Reference: recoded**. The entry address remains unverified at runtime.
+- `card_time_walk`: recoded wrapper explicitly checks Stranglehold; Unlimited implementation does not perform that check here. **Reference: recoded**.
+- `card_volcanic_eruption`: recoded implementation contains the Gaddock Teeg casting check and custom target handling; Unlimited implementation handles subtype hacking and stack copies. **Reference: recoded**, but these behavior differences require gameplay regression tests. Do not assume the two functions are interchangeable.
+
+The automated `audit_recoded_ownership.py` processes **all** linker-reported duplicate symbols and marks every duplicated `card_*` with a definition in `recoded_cards.c` as `prefer_recoded_pending_runtime_validation`. This is a policy/coverage audit, **not linker precedence enforcement**. Until the duplicate symbols are actually resolved and dispatch is reviewed, no claim can be made that the correct function runs.
+
+Earlier address-binding experiments (`card_rock_hydra_exe`, etc.) resolved linker names only; they did not select the correct duplicate implementation or verify executable addresses.
+
 ## Safe workflow
 
 1. For each duplicate, compare both function bodies and caller expectations.
