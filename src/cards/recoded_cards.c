@@ -2286,7 +2286,9 @@ int card_goblin_shrine(int player, int card, event_t event){
 		}
 	}
 	else{
-		return card_goblin_shrine_exe(player, card, event);
+		target_definition_t td;
+		default_target_definition(player, card, &td, TYPE_LAND);
+		return targeted_aura(player, card, event, &td, "Select target land.");
 	}
 	return 0;		
 }
@@ -2301,12 +2303,18 @@ int card_goblin_caves(int player, int card, event_t event){
 		}
 	}
 	else{
-		return card_goblin_shrine_exe(player, card, event);
+		target_definition_t td;
+		default_target_definition(player, card, &td, TYPE_LAND);
+		return targeted_aura(player, card, event, &td, "Select target land.");
 	}
 	return 0;		
 }
 
-extern int hack_animate_dead_player, hack_animate_dead_card;
+/* These were extern declarations without storage in the source tree.
+ * Keep one DLL-local definition per variable pending verification of
+ * possible original EXE-side consumers. */
+int hack_animate_dead_player = -1;
+int hack_animate_dead_card = -1;
 int card_animate_dead(int player, int card, event_t event){
 // 0x4B5780
 	// See also card_dance_of_the_dead() in ice_age.c and card_necromancy() in visions.c
