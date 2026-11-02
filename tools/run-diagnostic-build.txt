@@ -139,3 +139,6 @@ Through commit f765e14
 Diagnostic build request 47
 0 duplicate and 0 unresolved verified in run 41439253008; save linked DLL/debug files and verify PE structure for further runtime tests
 Through commit 68fb964
+Diagnostic build request 48
+Pre-menu Windows exception 0xc0000005 at 0x0200A9E9: collect PE headers, debug lookup and disassembly; do not change linker addresses without evidence.
+Through commit b9e630b
