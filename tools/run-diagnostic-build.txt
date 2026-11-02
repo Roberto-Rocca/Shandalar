@@ -130,3 +130,6 @@ Through commit 0bf2565
 Diagnostic build request 44
 Reconstructed Fork from original DLL disassembly, replacing card_fork_orig with twincast and targets[2].player; expect four missing symbols
 Through commit 608f96e
+Diagnostic build request 45
+Fork reconstruction confirmed: 0 duplicate, 4 undefined in run 41437714797. Fix SyntaxError in EXE provenance audit and retain full artifacts.
+Through commit 828227d
