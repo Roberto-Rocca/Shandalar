@@ -94,3 +94,6 @@ Through commit fe34c89
 Diagnostic build request 32
 Repair malformed YAML escaped newline after mass-run no-job failures
 Through commit d60e047
+Diagnostic build request 33
+All YAML escaped newlines removed; rerun mass duplicate diagnostic
+Through commit 371ae63
