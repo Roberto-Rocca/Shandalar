@@ -112,3 +112,6 @@ Through commit 8be572d
 Diagnostic build request 38
 Source inventory and candidate ranking for the nine unresolved symbols; no guessed executable address or gameplay edits
 Through commit 3f5eaa5
+Diagnostic build request 39
+Dryad Arbor: remove artifact-only unresolved call, retain green mana producer; expect zero duplicates and eight unresolved
+Through commit f55d487
