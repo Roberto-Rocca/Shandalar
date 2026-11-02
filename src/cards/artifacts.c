@@ -805,7 +805,7 @@ int effect_illusionary_mask(int player, int card, event_t event){
 	if( instance->targets[0].player > -1 ){
 		if( (event == EVENT_TAP_CARD && is_attacking(instance->targets[0].player, instance->targets[0].card)) ||
 			damage_dealt_by_me(instance->targets[0].player, instance->targets[0].card, event, 0) ||
-			damage_dealt_to_me(instance->targets[0].player, instance->targets[0].card, event, 0)
+			damage_dealt_to_me_arbitrary(instance->targets[0].player, instance->targets[0].card, event, 0, player, card)
 		  ){
 			instance->targets[1].player = 66;
 			int i;
