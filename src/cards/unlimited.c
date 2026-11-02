@@ -4921,7 +4921,9 @@ int card_veteran_bodyguard(int player, int card, event_t event){
 	return 0;
 }
 
-int card_volcanic_eruption(int player, int card, event_t event){
+/* Legacy implementation retained for regression testing of target selection and spell copies. */
+/* The public card_volcanic_eruption handler is owned by recoded_cards.c. */
+int card_volcanic_eruption_legacy_unlimited(int player, int card, event_t event){
 	// 0x41c4a0
 	if( ! IS_GS_EVENT(player, card, event) ){
 		return 0;
