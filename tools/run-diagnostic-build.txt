@@ -121,3 +121,6 @@ Through commit 77f5d6f
 Diagnostic build request 41
 Isochron Scepter: replace missing can_legally_play with can_legally_play_iid, documented ID-semantics test needed
 Through commit 417808d
+Diagnostic build request 42
+Reconstruct Unmask nonland discard through new_effect_coercion; expect 0 duplicates and 5 missing symbols
+Through commit 87842c8a
