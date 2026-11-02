@@ -136,3 +136,6 @@ Through commit 828227d
 Diagnostic build request 46
 Single batched check: Goblin Shrine/Caves targeted aura; Animate Dead state variables; Illusionary Mask damage handler. Expected zero duplicates and zero unresolved; ABI/gameplay tests still required.
 Through commit f765e14
+Diagnostic build request 47
+0 duplicate and 0 unresolved verified in run 41439253008; save linked DLL/debug files and verify PE structure for further runtime tests
+Through commit 68fb964
