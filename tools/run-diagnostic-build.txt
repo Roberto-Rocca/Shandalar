@@ -115,3 +115,6 @@ Through commit 3f5eaa5
 Diagnostic build request 39
 Dryad Arbor: remove artifact-only unresolved call, retain green mana producer; expect zero duplicates and eight unresolved
 Through commit f55d487
+Diagnostic build request 40
+Wall of Roots: use existing COUNTER_M0_M1 with add_counters; expect zero duplicates and seven unresolved symbols
+Through commit 77f5d6f
