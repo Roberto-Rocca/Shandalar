@@ -103,3 +103,6 @@ Through commit c6f7f7f
 Diagnostic build request 35
 Batch: preserve exported Ancestral Recall and Swords to Plowshares handlers required by ManalinkEh.asm
 Through commit e936e7c
+Diagnostic build request 36
+Batch: isolate twelve remaining shared helper conflicts, provisional ownership only
+Through commit 7a279f6
