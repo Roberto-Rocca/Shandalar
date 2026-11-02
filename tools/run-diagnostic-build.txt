@@ -73,3 +73,6 @@ Through commit 0c4746c
 Diagnostic build request 25
 Batch: group 303 duplicate symbols by source-file pair, diagnostic only
 Through commit 8a500b5
+Diagnostic build request 26
+Batch: audit recoded_cards precedence against all duplicate symbols including Rock Hydra, Volcanic Eruption, Time Walk
+Through commit 831b25b
