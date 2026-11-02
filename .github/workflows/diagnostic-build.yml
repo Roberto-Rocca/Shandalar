@@ -54,6 +54,9 @@ jobs:
       - name: Isolate recoded card duplicate symbols in batch
         run: python3 tools/isolate_recoded_duplicates.py
 
+      - name: Experimentally isolate remaining card duplicates
+        run: python3 tools/isolate_remaining_card_duplicates.py
+
       - name: Attempt 32-bit build and retain error log
         shell: bash
         run: |
@@ -102,6 +105,7 @@ jobs:
             linker-duplicate-file-pairs.csv
             recoded-ownership-audit.csv
             recoded-batch-renames.csv
+            experimental-card-ownership.csv
           if-no-files-found: warn
 
       - name: Report result
