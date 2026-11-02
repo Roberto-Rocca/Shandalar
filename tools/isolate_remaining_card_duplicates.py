@@ -39,7 +39,10 @@ renames = defaultdict(list)
 for symbol, paths in sorted(owners.items()):
     if len(paths) < 2:
         continue
-    winner = min(paths, key=priority)
+    # ManalinkEh.asm calls these public Unlimited handlers directly.
+    required_unlimited = {"card_ancestral_recall", "card_swords_to_plowshares"}
+    unlimited_path = folder / "unlimited.c"
+    winner = unlimited_path if symbol in required_unlimited and unlimited_path in paths else min(paths, key=priority)
     for loser in paths:
         if loser == winner:
             continue
