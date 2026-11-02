@@ -4669,7 +4669,8 @@ int card_time_vault(int player, int card, event_t event)
   return generic_activated_ability(player, card, event, GAA_UNTAPPED, MANACOST_X(0), 0, NULL, NULL);
 }
 
-int card_time_walk(int player, int card, event_t event ){
+/* Legacy implementation retained for comparison; the recoded_cards.c handler owns card_time_walk. */
+int card_time_walk_legacy_unlimited(int player, int card, event_t event ){
 	// original code : 0041B710
 
 	if( event == EVENT_RESOLVE_SPELL ){
