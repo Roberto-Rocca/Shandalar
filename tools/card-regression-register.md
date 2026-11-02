@@ -57,3 +57,8 @@ All items remain **untested in gameplay**. The batch owner selection is temporar
 - Preserved `mana_producer_fixed(..., COLOR_GREEN)`; no other event handling changed.
 - **Validate in-game**: green color, land + creature types, summoning sickness, green mana production, interactions with artifact-only effects. Card data must be checked separately.
 - Upstream cross-check: `ShandalarMagic/Shandalar` retains this unresolved call, so this is a reasoned corrective divergence, **not** a verbatim upstream reconstruction.
+
+## 2026-11-02 — Wall of Roots counter correction
+
+- Replaced unavailable `add_0_minus1_counters(player, card, 1)` with `add_counters(player, card, COUNTER_M0_M1, 1)`, using the existing exact `COUNTER_M0_M1` enum in `src/defs.h`.
+- Verify -0/-1 counter accumulation, toughness updates, mana timing and once-per-turn activation, especially across turn boundaries. Compilation is not gameplay validation.
