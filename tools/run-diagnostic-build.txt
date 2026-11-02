@@ -76,3 +76,6 @@ Through commit 8a500b5
 Diagnostic build request 26
 Batch: audit recoded_cards precedence against all duplicate symbols including Rock Hydra, Volcanic Eruption, Time Walk
 Through commit 831b25b
+Diagnostic build request 27
+Batch: prefer recoded_cards Time Walk by renaming legacy duplicate only (body preserved); compare duplicate counts
+Through commit 609caac
