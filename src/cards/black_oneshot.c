@@ -89,7 +89,14 @@ int card_unmask(int player, int card, event_t event){
     }
     if(event == EVENT_RESOLVE_SPELL ){
 		if( valid_target(&td1) ){
-			effect_coercion(instance->targets[0].player, player, 1, 1, TYPE_LAND, 1, 0, 0, 0, 0, 0, 0, -1, 0);
+			/* Unmask: look at the targeted player's hand and choose one nonland card to discard. */
+            ec_definition_t coercion;
+            test_definition_t nonland;
+            default_ec_definition(instance->targets[0].player, player, &coercion);
+            coercion.cards_to_reveal = hand_count[instance->targets[0].player];
+            default_test_definition(&nonland, TYPE_LAND);
+            nonland.type_flag = DOESNT_MATCH;
+            new_effect_coercion(&coercion, &nonland);
 		}
 		kill_card(player, card, KILL_DESTROY);
     }
