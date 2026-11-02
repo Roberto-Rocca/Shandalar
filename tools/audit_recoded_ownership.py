@@ -35,9 +35,25 @@ recoded_count = sum("prefer_recoded" in row[1] for row in rows)
 print(f"Audited duplicate symbols: {len(rows)}")
 print(f"Card symbols with recoded priority: {recoded_count}")
 print(f"Other symbols for review: {len(rows) - recoded_count}")
+# Already resolved symbols legitimately disappear from the linker duplicate list.
+# Verify the remaining public definition in source instead of expecting an error.
+source_root = Path("src/cards")
+recoded_text = (source_root / "recoded_cards.c").read_text(encoding="utf-8", errors="replace")
+unlimited_text = (source_root / "unlimited.c").read_text(encoding="utf-8", errors="replace")
 for name in ("card_rock_hydra", "card_volcanic_eruption", "card_time_walk"):
+    pattern = re.compile(r"\\bint\\s+" + re.escape(name) + r"\\s*\\(")
+    if len(pattern.findall(recoded_text)) != 1:
+        raise SystemExit(f"Expected exactly one recoded definition: {name}")
     matches = [row for row in rows if row[0] == name]
-    if not matches or matches[0][1] != "prefer_recoded_pending_runtime_validation":
-        raise SystemExit(f"Expected recoded precedence not found for {name}")
-    print(f"Verified recoded priority: {name}")
+    if pattern.search(unlimited_text):
+        if not matches or matches[0][1] != "prefer_recoded_pending_runtime_validation":
+            raise SystemExit(f"Still duplicated but missing priority audit: {name}")
+        print(f"Pending duplicate, recoded preferred: {name}")
+    else:
+        if matches:
+            raise SystemExit(f"Unexpected duplicate after legacy rename: {name}")
+        legacy_pattern = re.compile(r"\\bint\\s+" + re.escape(name + "_legacy_unlimited") + r"\\s*\\(")
+        if not legacy_pattern.search(unlimited_text):
+            raise SystemExit(f"Legacy implementation not retained: {name}")
+        print(f"Resolved, recoded owns public symbol: {name}")
 print(f"Report: {destination}")
