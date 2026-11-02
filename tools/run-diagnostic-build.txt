@@ -82,3 +82,6 @@ Through commit 609caac
 Diagnostic build request 28
 Batch: fix audit for resolved Time Walk and prioritize recoded Rock Hydra while retaining legacy implementation
 Through commit f2c61cf
+Diagnostic build request 29
+Batch: prefer recoded Volcanic Eruption, retain original Unlimited implementation for behavior comparison
+Through commit ba180df
