@@ -97,6 +97,28 @@ jobs:
             # diagnostic expects duplicate errors and is not applicable here.
           fi
 
+      - name: Inspect linked PE and export table
+        if: success()
+        shell: bash
+        run: |
+          file src/ManalinkEh.dll | tee pe-inspection.txt
+          i686-w64-mingw32-objdump -f src/ManalinkEh.dll >> pe-inspection.txt
+          i686-w64-mingw32-objdump -p src/ManalinkEh.dll >> pe-inspection.txt
+          i686-w64-mingw32-objdump -h src/ManalinkEh.dll >> pe-inspection.txt
+          test -s src/ManalinkEh.dll
+          grep -q "pei-i386" pe-inspection.txt
+
+      - name: Upload compiled DLL and debug symbols
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shandalar-diagnostic-dll
+          path: |
+            src/ManalinkEh.dll
+            src/ManalinkEh.dbg
+            pe-inspection.txt
+          if-no-files-found: error
+
       - name: Upload diagnostic log
         if: always()
         uses: actions/upload-artifact@v4
