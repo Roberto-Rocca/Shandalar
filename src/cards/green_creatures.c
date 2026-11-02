@@ -33,7 +33,7 @@ int card_wall_of_roots(int player, int card, event_t event){
 
     if(event == EVENT_ACTIVATE ){
 		instance->info_slot = 1;
-		add_0_minus1_counters(player, card, 1);
+		add_counters(player, card, COUNTER_M0_M1, 1);
 		produce_mana(player, COLOR_GREEN, 1);
     }
 
