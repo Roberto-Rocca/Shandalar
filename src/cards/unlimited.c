@@ -3906,7 +3906,8 @@ static const char* target_must_be_damage_targeting_this_rock_hydra(int who_choos
 		  : text_lines[1]);	// can only work because initial targeting uses text_lines[0] of same source
 }
 
-int card_rock_hydra(int player, int card, event_t event)
+/* Legacy Rock Hydra preserved; recoded_cards.c owns the public handler. */
+int card_rock_hydra_legacy_unlimited(int player, int card, event_t event)
 {
   // 00454ed0
 
