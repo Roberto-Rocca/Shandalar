@@ -41,7 +41,7 @@ source_root = Path("src/cards")
 recoded_text = (source_root / "recoded_cards.c").read_text(encoding="utf-8", errors="replace")
 unlimited_text = (source_root / "unlimited.c").read_text(encoding="utf-8", errors="replace")
 for name in ("card_rock_hydra", "card_volcanic_eruption", "card_time_walk"):
-    pattern = re.compile(r"\\bint\\s+" + re.escape(name) + r"\\s*\\(")
+    pattern = re.compile(r"\bint\s+" + re.escape(name) + r"\s*\(")
     if len(pattern.findall(recoded_text)) != 1:
         raise SystemExit(f"Expected exactly one recoded definition: {name}")
     matches = [row for row in rows if row[0] == name]
@@ -52,7 +52,7 @@ for name in ("card_rock_hydra", "card_volcanic_eruption", "card_time_walk"):
     else:
         if matches:
             raise SystemExit(f"Unexpected duplicate after legacy rename: {name}")
-        legacy_pattern = re.compile(r"\\bint\\s+" + re.escape(name + "_legacy_unlimited") + r"\\s*\\(")
+        legacy_pattern = re.compile(r"\bint\s+" + re.escape(name + "_legacy_unlimited") + r"\s*\(")
         if not legacy_pattern.search(unlimited_text):
             raise SystemExit(f"Legacy implementation not retained: {name}")
         print(f"Resolved, recoded owns public symbol: {name}")
