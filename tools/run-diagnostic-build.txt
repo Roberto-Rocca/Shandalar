@@ -97,3 +97,6 @@ Through commit d60e047
 Diagnostic build request 33
 All YAML escaped newlines removed; rerun mass duplicate diagnostic
 Through commit 371ae63
+Diagnostic build request 34
+Experimental batch isolate all remaining card_* duplicates, provisional ownership and CSV report
+Through commit c6f7f7f
