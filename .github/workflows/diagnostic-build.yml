@@ -107,6 +107,8 @@ jobs:
           i686-w64-mingw32-objdump -h src/ManalinkEh.dll >> pe-inspection.txt
           test -s src/ManalinkEh.dll
           grep -q "pei-i386" pe-inspection.txt
+          # Original known-working DLL has DllCharacteristics=0x0000.
+          grep -Eq "DllCharacteristics[[:space:]]+00000000" pe-inspection.txt
 
       - name: Diagnose pre-menu crash address
         if: success()
