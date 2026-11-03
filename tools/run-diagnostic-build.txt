@@ -147,3 +147,5 @@ Windows pre-menu crash 0xc0000005 at 0x0200a9e9: match original working Manalink
 Through commit c7f7ed9
 Diagnostic build request 50
 Regression: pre-turn assertion token_generation.c:477 generating CARD_ID_RULES_ENGINE (15550); test explicit reserved technical IDs with table identity check; commit 2fc11d8.
+Diagnostic build request 51
+Fix direct absolute calls to Magic.exe evaluator 0x004352D0 in get_power/get_toughness: prior relative call incorrectly jumps to reserved 0x028DCA82; commit 30d12de.
