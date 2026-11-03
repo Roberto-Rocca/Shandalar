@@ -12,8 +12,11 @@ _display_error_message:
   push	ebp
   mov	ebp, esp
   mov	eax, dword [ebp+0x08]
-  mov eax, 0x471d30
-  call eax
+  call dword [exe_target_471d30]
   leave
   ret
   align	32
+
+; Absolute Magic.exe entry points: indirect calls preserve all input registers.
+section .data
+exe_target_471d30: dd 0x471d30
