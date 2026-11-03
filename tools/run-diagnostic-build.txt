@@ -150,3 +150,4 @@ Regression: pre-turn assertion token_generation.c:477 generating CARD_ID_RULES_E
 Diagnostic build request 51
 Fix direct absolute calls to Magic.exe evaluator 0x004352D0 in get_power/get_toughness: prior relative call incorrectly jumps to reserved 0x028DCA82; commit 30d12de.
 Diagnostic build request 52: audit all NASM direct numeric calls and use register-preserving indirect calls into Magic.exe.
+Diagnostic build request 53: correct Immobilizer Eldrazi target flag and guard null target definitions in generic activated ability.
