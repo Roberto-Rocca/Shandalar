@@ -13,7 +13,8 @@ _ability_effect_keyword:
   push dword [0x7876E8]
   push dword [0x7A3610]
 
-  call 0x4A09A0
+  mov eax, 0x4A09A0
+  call eax
   add esp, 0x14
   leave
   ret
