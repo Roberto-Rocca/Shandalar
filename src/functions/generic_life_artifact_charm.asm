@@ -34,8 +34,7 @@ _generic_life_artifact_charm:
 	mov     eax, [0x737e1c]
 	cmp     PlayerID, eax
 	jnz     .endofproc
-	mov eax, 0x401a40
-  call eax
+	call dword [exe_target_401a40]
 	jnz     .endofproc
 	mov     eax, UserParam1
 	SleightColorProcedure eax
@@ -46,8 +45,7 @@ _generic_life_artifact_charm:
 	mov     eax, TriggerPlayer
 	mov     ecx, TriggerCard
 	call    GetCardInfoFunction
-	mov eax, 0x401710
-  call eax
+	call dword [exe_target_401710]
 	test    UserParam1, eax
 	jz      .endofproc
 	mov     eax, [esi+0x6c]
@@ -75,18 +73,15 @@ _generic_life_artifact_charm:
 	push    0x72
 	push    CardID
 	push    PlayerID
-	mov eax, 0x436550
-  call eax
+	call dword [exe_target_436550]
 	add     esp, 0x14
-	mov eax, 0x436930
-  call eax
+	call dword [exe_target_436930]
 	cmp     dword [0x4ef194], 1
 	jz      .endofproc
 	push    0x91
 	push    CardID
 	push    PlayerID
-	mov eax, 0x4359b0
-  call eax
+	call dword [exe_target_4359b0]
 	add     esp, 0xc
 	PlayerGainLife PlayerID, 1
 	mov     eax, PlayerID
@@ -99,3 +94,10 @@ _generic_life_artifact_charm:
 	leave
 	ret
 	align 32
+; Absolute Magic.exe entry points: indirect calls preserve all input registers.
+section .data
+exe_target_401a40: dd 0x401a40
+exe_target_401710: dd 0x401710
+exe_target_436550: dd 0x436550
+exe_target_436930: dd 0x436930
+exe_target_4359b0: dd 0x4359b0
