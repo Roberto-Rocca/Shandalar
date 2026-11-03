@@ -9,7 +9,8 @@ _get_card_instance:
 	push esi
 	mov ecx, CardID
 	mov eax, PlayerID
-	call 0x401a80
+	mov eax, 0x401a80
+  call eax
 	mov eax, esi
 	pop esi
 	leave
@@ -23,7 +24,8 @@ _get_displayed_card_instance:
 	push esi
 	mov ecx, CardID
 	mov eax, PlayerID
-	call 0x401ab0
+	mov eax, 0x401ab0
+  call eax
 	mov eax, esi
 	pop esi
 	leave
