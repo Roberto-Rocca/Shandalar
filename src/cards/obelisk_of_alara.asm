@@ -29,7 +29,8 @@ _card_obelisk_of_alara:
 	; If it can use green mana, try to +4/+4, or cancel...
 	mov     dword [ebp-8], 5
 	; There is a creature?
-	call    0x4177a0
+	mov eax, 0x4177a0
+  call eax
 	test    eax, eax
 	jz      .0001aa
 	HaveManaOrJump 1, GreenMana, .0001aa
@@ -71,7 +72,8 @@ _card_obelisk_of_alara:
 	push    CardID
 	push    PlayerID
 	push    PlayerID
-	call    0x471eb0
+	mov eax, 0x471eb0
+  call eax
 	add     esp, 0x1c
 	; Recover Card Pointer Info
 	mov     CardInfoSlot1, eax
@@ -88,7 +90,8 @@ _card_obelisk_of_alara:
 	jne     .0001a	
 	LoadResource 0x4d75f8 ; Target a player... or cancel...
 	mov     edx, ResourceString1
-	call    0x41aea0
+	mov eax, 0x41aea0
+  call eax
 	test    eax, eax
 	jz     	.0001z
 .0001a:	
@@ -98,12 +101,14 @@ _card_obelisk_of_alara:
 	jne     .0001c	
 .0001b:
 	; Target creature, if there is no one... open the select window again... (invalid option...)
-	call    0x4177a0
+	mov eax, 0x4177a0
+  call eax
 	test    eax, eax
 	jz      .0001
 	LoadResource 0x4d7696 ; Target a creature... or cancel...
 	mov     edx, ResourceString1
-	call    0x4197a0
+	mov eax, 0x4197a0
+  call eax
 	test    eax, eax
 	jz      .0001z
 .0001c:
@@ -145,7 +150,8 @@ _card_obelisk_of_alara:
 	cmp     eax, 2
 	jne     .0002c
 	; Valid Target Yet?
-	call    0x419250
+	mov eax, 0x419250
+  call eax
 	test    eax, eax
 	jz      .endofproc1
 	;
@@ -155,14 +161,16 @@ _card_obelisk_of_alara:
 	push    dword [0x728370]
 	push    CardID
 	push    PlayerID
-	call    0x4a09a0
+	mov eax, 0x4a09a0
+  call eax
 	add     esp, 0x14
 	mov     ecx, eax
 	cmp     eax, -1
 	jz      .endofproc1
 	mov     eax, PlayerID
 	push    esi
-	call    0x401a80
+	mov eax, 0x401a80
+  call eax
 	mov     word [esi+0x12], 4
 	mov     word [esi+0x1c], 4
 	pop     esi
@@ -181,7 +189,8 @@ _card_obelisk_of_alara:
 	jne     .endofproc1
 	;
 	; Valid Target Yet?
-	call    0x419250
+	mov eax, 0x419250
+  call eax
 	test    eax, eax
 	jz      .endofproc1
 	;
@@ -191,14 +200,16 @@ _card_obelisk_of_alara:
 	push    dword [0x728370]
 	push    CardID
 	push    PlayerID
-	call    0x4a09a0
+	mov eax, 0x4a09a0
+  call eax
 	add     esp, 0x14
 	mov     ecx, eax
 	cmp     eax, -1
 	jz      .endofproc1
 	mov     eax, PlayerID
 	push    esi
-	call    0x401a80
+	mov eax, 0x401a80
+  call eax
 	mov     word [esi+0x12], -2
 	mov     word [esi+0x1c], -2
 	pop     esi
