@@ -224,6 +224,15 @@ static int get_updated_tokens_number(int player, int number)
 
 static int is_reserved_id(int csvid){
 	int iid = get_internal_card_id_from_csv_id(csvid);
+	// Never treat an unmapped or mismatched entry as a reserved card.
+	if (iid < 0 || cards_data[iid].id != csvid){
+		return 0;
+	}
+	// The rules engine and deadbox are internal-only reserved cards by identity.
+	// Historical Cards.dat versions need not tag them as Vanguard/TYPE_EFFECT.
+	if (csvid == CARD_ID_RULES_ENGINE || csvid == CARD_ID_DEADBOX){
+		return 1;
+	}
 	return (cards_data[iid].cc[2] == 3	// vanguard card, edh, etc.
 			|| cards_data[iid].type == TYPE_EFFECT);
 }
