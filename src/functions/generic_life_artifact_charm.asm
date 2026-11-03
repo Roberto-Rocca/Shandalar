@@ -34,7 +34,8 @@ _generic_life_artifact_charm:
 	mov     eax, [0x737e1c]
 	cmp     PlayerID, eax
 	jnz     .endofproc
-	call    0x401a40
+	mov eax, 0x401a40
+  call eax
 	jnz     .endofproc
 	mov     eax, UserParam1
 	SleightColorProcedure eax
@@ -45,7 +46,8 @@ _generic_life_artifact_charm:
 	mov     eax, TriggerPlayer
 	mov     ecx, TriggerCard
 	call    GetCardInfoFunction
-	call    0x401710
+	mov eax, 0x401710
+  call eax
 	test    UserParam1, eax
 	jz      .endofproc
 	mov     eax, [esi+0x6c]
@@ -73,15 +75,18 @@ _generic_life_artifact_charm:
 	push    0x72
 	push    CardID
 	push    PlayerID
-	call    0x436550
+	mov eax, 0x436550
+  call eax
 	add     esp, 0x14
-	call    0x436930
+	mov eax, 0x436930
+  call eax
 	cmp     dword [0x4ef194], 1
 	jz      .endofproc
 	push    0x91
 	push    CardID
 	push    PlayerID
-	call    0x4359b0
+	mov eax, 0x4359b0
+  call eax
 	add     esp, 0xc
 	PlayerGainLife PlayerID, 1
 	mov     eax, PlayerID
