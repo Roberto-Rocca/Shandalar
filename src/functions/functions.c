@@ -10704,6 +10704,12 @@ int granted_generic_activated_ability(int granting_player, int granting_card, in
 		return 0;	// granted_to_player/granted_to_card may not yet be valid
 	}
 
+	// A targeting ability without a target definition is invalid.  Reject it
+	// before can_target()/pick_target() dereference a null pointer.
+	if ((mode & GAA_CAN_TARGET) && td == NULL){
+		return 0;
+	}
+
 	if( event == EVENT_CAN_ACTIVATE ){
 		card_instance_t* granting_instance = get_card_instance(granting_player, granting_card);
 		card_instance_t* granted_to_instance = get_card_instance(granted_to_player, granted_to_card);
