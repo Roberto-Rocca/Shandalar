@@ -13,9 +13,11 @@ _ability_effect_keyword:
   push dword [0x7876E8]
   push dword [0x7A3610]
 
-  mov eax, 0x4A09A0
-  call eax
+  call dword [exe_target_4a09a0]
   add esp, 0x14
   leave
   ret
   align 32
+; Absolute Magic.exe entry points: indirect calls preserve all input registers.
+section .data
+exe_target_4a09a0: dd 0x4a09a0
