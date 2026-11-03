@@ -51,6 +51,9 @@ jobs:
         run: |
           python3 tools/audit_card_ids.py | tee card-id-audit.log
 
+      - name: Audit absolute NASM calls
+        run: python3 tools/audit_absolute_asm_calls.py
+
       - name: Isolate recoded card duplicate symbols in batch
         run: python3 tools/isolate_recoded_duplicates.py
 
