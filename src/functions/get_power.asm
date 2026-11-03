@@ -10,7 +10,8 @@ _get_power:
   push 0x32
   push CardID
   push PlayerID
-  call 0x4352D0
+  mov eax, 0x4352D0
+  call eax
   add esp, 0x10
   leave
   ret
@@ -24,7 +25,8 @@ _get_toughness:
   push 0x33
   push CardID
   push PlayerID
-  call 0x4352D0
+  mov eax, 0x4352D0
+  call eax
   add esp, 0x10
   leave
   ret
