@@ -145,3 +145,5 @@ Through commit b9e630b
 Diagnostic build request 49
 Windows pre-menu crash 0xc0000005 at 0x0200a9e9: match original working ManalinkEh.dll PE DllCharacteristics=0; compare runtime behavior in isolated test copy only.
 Through commit c7f7ed9
+Diagnostic build request 50
+Regression: pre-turn assertion token_generation.c:477 generating CARD_ID_RULES_ENGINE (15550); test explicit reserved technical IDs with table identity check; commit 2fc11d8.
