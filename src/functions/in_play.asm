@@ -8,7 +8,8 @@ _is_not_dead:
   push  ebp
   mov ebp, esp
   mov     eax, 0x715dd8
-  call    0x471d30
+  mov eax, 0x471d30
+  call eax
   leave
   ret
   align 32
@@ -23,7 +24,8 @@ _display_error_message:
   push	ebp
   mov	ebp, esp
   mov	eax, dword [ebp+0x08]
-  call	0x471d30
+  mov eax, 0x471d30
+  call eax
   leave
   ret
   align	32
