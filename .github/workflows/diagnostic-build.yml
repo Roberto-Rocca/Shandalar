@@ -51,6 +51,9 @@ jobs:
         run: |
           python3 tools/audit_card_ids.py | tee card-id-audit.log
 
+      - name: Audit token IDs against available game databases
+        run: python3 tools/audit_token_id_mapping.py | tee token-id-audit.log
+
       - name: Audit absolute NASM calls
         run: python3 tools/audit_absolute_asm_calls.py
 
@@ -153,6 +156,7 @@ jobs:
           path: |
             build.log
             card-id-audit.log
+            token-id-audit.log
             card-id-audit.json
             linker-symbol-audit.json
             linker-symbol-audit.csv
