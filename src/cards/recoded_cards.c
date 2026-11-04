@@ -679,22 +679,10 @@ int card_giant_spider(int player, int card, event_t event ){
     return card_giant_spider_exe(player, card, event);
 }
 
-int card_time_walk(int player, int card, event_t event ){
-// original code : 0041B710
-
-	if( event == EVENT_RESOLVE_SPELL ){
-		if( ! check_battlefield_for_id(1-player, CARD_ID_STRANGLEHOLD) ){
-			return card_time_walk_exe(player, card, event);
-		}
-		else{
-			kill_card(player, card, KILL_DESTROY);
-		}
-	}
-	else{
-		return card_time_walk_exe(player, card, event);
-	}
-	return 0;
-}
+/* The canonical Time Walk handler is in unlimited.c and uses time_walk_effect().
+ * The obsolete wrapper here depended on unresolved card_time_walk_exe.
+ * Keep it out of the build rather than creating a fake EXE trampoline.
+ */
 
 int card_demonic_tutor(int player, int card, event_t event ){
 // original code : 0041D7C0

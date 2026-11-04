@@ -887,7 +887,7 @@ int card_isochron_scepter  (int player, int card, event_t event){
 		}
 	}
 
-    if( event == EVENT_CAN_ACTIVATE && instance->info_slot > 0 && can_legally_play(player, instance->info_slot ) ){
+    if( event == EVENT_CAN_ACTIVATE && instance->info_slot > 0 && can_legally_play_csvid(player, instance->info_slot) ){
 		return generic_activated_ability(player, card, event, GAA_UNTAPPED+GAA_NONSICK, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
