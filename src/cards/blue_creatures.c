@@ -45,7 +45,7 @@ int card_vodalian_knights(int player, int card, event_t event)
 
 int card_synchronous_sliver(int player, int card, event_t event){
     if( in_play(player, card) && has_creature_type(affected_card_controller, affected_card, SUBTYPE_SLIVER ) ){
-        vigilance( affected_card_controller, affected_card );
+        vigilance( affected_card_controller, affected_card, event );
     }
     return 0;
 }

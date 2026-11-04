@@ -86,7 +86,9 @@ int card_lord_of_atlantis2(int player, int card, event_t event){
 
 int card_bribery(int player, int card, event_t event){
 // original code : 0040F730
-	return steal_permanent_from_target_opponent_deck(player, card, event, TYPE_CREATURE, 0, 0, 0, 0, 0, 0, 0, -1, 0);
+	test_definition_t creature_test;
+	new_default_test_definition(&creature_test, TYPE_CREATURE, "Select a creature");
+	return steal_permanent_from_target_opponent_deck(player, card, event, &creature_test);
 }
 
 int card_kid_ape2(int player, int card, event_t event){
@@ -195,7 +197,7 @@ int card_tetravus2(int player, int card, event_t event){
 			if( choice == 1 ){
 				while( tetravites > 0 ){
 						if( pick_target(&td, "TETRAVITE") ){
-							if( get_id(instance->targets[0].player, instance->targets[0].card) == get_id_by_name("Tetravite") ){
+							if( get_id(instance->targets[0].player, instance->targets[0].card) == CARD_ID_TETRAVITE ){
 								if( instance->targets[8].player == get_special_infos(instance->targets[0].player,instance->targets[0].card) ){
 									kill_card(instance->targets[0].player,instance->targets[0].card, KILL_SACRIFICE);
 									add_1_1_counter(player, card);
@@ -229,7 +231,7 @@ int card_slith_predator(int player, int card, event_t event){
 
 int card_slith_firewalker(int player, int card, event_t event){
 
-    haste(player, card);
+    haste(player, card, event);
 
     return card_slith_predator(player, card, event);
 }
@@ -459,7 +461,7 @@ int card_nuisance_engine(int player, int card, event_t event){
 // original code : 004DAC3A
 
     if( event == EVENT_RESOLVE_ACTIVATION ){
-        generate_token_by_id(player, CARD_ID_PEST);
+        generate_token_by_id(player, card, CARD_ID_PEST);
     }
 
 	return generic_activated_ability(player, card, event, GAA_UNTAPPED+GAA_NONSICK, 2, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -478,7 +480,7 @@ int clone_legacy(int player, int card, event_t event){
 					card_instance_t *orig = get_card_instance( instance->targets[0].player, instance->targets[0].card );
 					orig->targets[10].player = 66;
 					if( instance->targets[1].card == CARD_ID_EVIL_TWIN ){
-						int effect = generate_token_by_id(player, CARD_ID_EVIL_TWIN_EFFECT);
+						int effect = generate_reserved_token_by_id(player, CARD_ID_EVIL_TWIN_EFFECT);
 						card_instance_t *twin = get_card_instance(player, effect);
 						twin->targets[9].player = player;
 						twin->targets[9].card = card;
@@ -647,7 +649,7 @@ int card_pentavite(int player, int card, event_t event ){
 			int trig = 0;
 
 			if( is_what(trigger_cause_controller, trigger_cause, TYPE_ENCHANTMENT) &&
-				is_aura(trigger_cause_controller, trigger_cause, 1) 
+				has_subtype(trigger_cause_controller, trigger_cause, SUBTYPE_AURA) 
 			  ){
 				card_instance_t *instance = get_card_instance(player, card);
 				if( instance->targets[0].player == player && instance->targets[0].card == card ){
@@ -724,19 +726,12 @@ int card_grey_ogre(int player, int card, event_t event ){
 }
 
 int card_solemn_simulacrum(int player, int card, event_t event){
-
-//    card_instance_t *instance = get_card_instance(player, card);
-
-    if( event == EVENT_RESOLVE_SPELL ){
-        int legacy = create_legacy_effect(player, card, &solemn_simulacrum_legacy);
-        card_instance_t *leg = get_card_instance(player, legacy);
-        leg->targets[0].card = card;
-        leg->targets[0].player = player;
-		if(	check_for_cip_effects_removal(player, card) > 0 ){
-			tutor_basic_land(player, 1, 1);
-		}
+    if( comes_into_play(player, card, event) ){
+        tutor_basic_land(player, 1, 1);
     }
-
+    if( this_dies_trigger(player, card, event, RESOLVE_TRIGGER_MANDATORY) ){
+        draw_cards(player, 1);
+    }
     return 0;
 }
 
@@ -748,7 +743,7 @@ int card_raise_the_alarm(int player, int card, event_t event){
 	}
 	
 	else if( event == EVENT_RESOLVE_SPELL ){
-			generate_tokens_by_id(player, CARD_ID_SOLDIER, 2);
+			generate_tokens_by_id(player, card, CARD_ID_SOLDIER, 2);
 			kill_card(player, card, KILL_DESTROY);
 	}
 	return 0;
@@ -992,7 +987,7 @@ int card_willow_satyr(int player, int card, event_t event){
 
     if( event == EVENT_RESOLVE_ACTIVATION ){
 		if( valid_target(&td) && in_play(instance->parent_controller, instance->parent_card) && is_tapped(instance->parent_controller, instance->parent_card)){
-			gain_control_until_source_is_in_play_and_tapped(player, instance->parent_card, instance->targets[0].player, instance->targets[0].card);
+			gain_control_until_source_is_in_play_and_tapped(player, instance->parent_card, instance->targets[0].player, instance->targets[0].card, 0);
 		}
 	}
 
@@ -1286,7 +1281,7 @@ int card_orcish_catapult(int player, int card, event_t event){
 					if( amount > 1 ){
 						cnters = internal_rand(amount);
 					}
-					int cters = get_updated_counters_number(instance->targets[i+1].player, cnters);
+					int cters = get_updated_counters_number(instance->targets[i+1].player, instance->targets[i+1].card, COUNTER_P1_P1, cnters);
 					add_oc_counters(instance->targets[i+1].player, instance->targets[i+1].card, cters);
 					amount-=cnters;
 				}
@@ -1303,19 +1298,21 @@ int card_orcish_catapult(int player, int card, event_t event){
 int card_volcanic_eruption(int player, int card, event_t event){
     target_definition_t td;
     default_target_definition(player, card, &td, TYPE_LAND);
-	
+    td.required_subtype = SUBTYPE_MOUNTAIN;
+
     card_instance_t *instance = get_card_instance(player, card);
 
 	if( event == EVENT_CAN_CAST && has_mana_multi(player, 1, 0, 3, 0, 0, 0) ){
 		if( player == AI ){
-			if( check_battlefield_for_targettable_subtype(player, card, 1-player, TYPE_LAND, SUBTYPE_MOUNTAIN) &&
+            td.allowed_controller = 1-player;
+			if( can_target(&td) &&
 				has_mana(player, COLOR_COLORLESS, 1)
 			  ){
 				return ! check_battlefield_for_id(2, CARD_ID_GADDOCK_TEEG);
 			}
 		}
 		else{
-			if( check_battlefield_for_targettable_subtype(player, card, 2, TYPE_LAND, SUBTYPE_MOUNTAIN) ){
+			if( can_target(&td) ){
 				return ! check_battlefield_for_id(2, CARD_ID_GADDOCK_TEEG);
 			}
 		}
@@ -1830,7 +1827,7 @@ int card_living_artifact(int player, int card, event_t event){
 			reason_for_trigger_controller == player
 		  ){
 			int trig = 0;
-			if( count_counters(player, card) > 0 ){
+			if( count_counters(player, card, COUNTER_VITALITY) > 0 ){
 				trig = 1;
 			}
 			if( trig == 1 ){
@@ -1838,7 +1835,7 @@ int card_living_artifact(int player, int card, event_t event){
 					event_result |= 1+player;
 				}
 				else if(event == EVENT_RESOLVE_TRIGGER){
-						remove_counter(player, card);
+						remove_counter(player, card, COUNTER_VITALITY);
 						gain_life(player, 1);
 				}
 			}
@@ -1892,8 +1889,8 @@ int card_biorythm(int player, int card, event_t event){
 	}
         
     else if(event == EVENT_RESOLVE_SPELL ){
-			set_life_total(player, count_permanents_by_type(player, card, TYPE_CREATURE));
-			set_life_total(1-player, count_permanents_by_type(1-player, card, TYPE_CREATURE));
+			set_life_total(player, count_permanents_by_type(player, TYPE_CREATURE));
+			set_life_total(1-player, count_permanents_by_type(1-player, TYPE_CREATURE));
 			kill_card(player, card, KILL_DESTROY);
     }
 	return 0;	
@@ -2183,7 +2180,7 @@ int card_soul_net(int player, int card, event_t event){
 			if( ! has_mana(player, COLOR_COLORLESS, 1) ){
 				break;
 			}
-			charge_mana_while_resolving(player, card, EVENT_RESOLVE_TRIGGER, COLOR_COLORLESS, 1);
+			charge_mana_while_resolving(player, card, EVENT_RESOLVE_TRIGGER, player, COLOR_COLORLESS, 1);
 			if( spell_fizzled == 1 ){
 				break;
 			} else {
@@ -2265,7 +2262,7 @@ int card_nevinyrrals_disk(int player, int card, event_t event){
 	
 	if( event == EVENT_RESOLVE_ACTIVATION ){
 		test_definition_t this_test;
-		default_test_definition(&this_test, TYPE_NONLAND);
+		default_test_definition(&this_test, TYPE_ARTIFACT | TYPE_CREATURE | TYPE_ENCHANTMENT);
 		this_test.type_flag = F1_NO_PWALKER;
 		new_manipulate_all(player, card, 2, &this_test, KILL_DESTROY);
 	}
@@ -2289,7 +2286,9 @@ int card_goblin_shrine(int player, int card, event_t event){
 		}
 	}
 	else{
-		return card_goblin_shrine_exe(player, card, event);
+		target_definition_t td;
+		default_target_definition(player, card, &td, TYPE_LAND);
+		return targeted_aura(player, card, event, &td, "Select target land.");
 	}
 	return 0;		
 }
@@ -2304,12 +2303,18 @@ int card_goblin_caves(int player, int card, event_t event){
 		}
 	}
 	else{
-		return card_goblin_shrine_exe(player, card, event);
+		target_definition_t td;
+		default_target_definition(player, card, &td, TYPE_LAND);
+		return targeted_aura(player, card, event, &td, "Select target land.");
 	}
 	return 0;		
 }
 
-extern int hack_animate_dead_player, hack_animate_dead_card;
+/* These were extern declarations without storage in the source tree.
+ * Keep one DLL-local definition per variable pending verification of
+ * possible original EXE-side consumers. */
+int hack_animate_dead_player = -1;
+int hack_animate_dead_card = -1;
 int card_animate_dead(int player, int card, event_t event){
 // 0x4B5780
 	// See also card_dance_of_the_dead() in ice_age.c and card_necromancy() in visions.c
@@ -2363,7 +2368,7 @@ int card_animate_dead(int player, int card, event_t event){
 		if( selected != -1 ){
 			hack_animate_dead_player = player;
 			hack_animate_dead_card = card;
-			reanimate_permanent(player, card, instance->targets[0].player, selected, 9, 0);
+			reanimate_permanent(player, card, instance->targets[0].player, selected, 9);
 		}
 		else{
 			kill_card(player, card, KILL_SACRIFICE);

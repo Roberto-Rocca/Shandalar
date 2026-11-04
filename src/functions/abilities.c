@@ -10,6 +10,27 @@
 /* Uses bits 0-11 of all cards' targets[17].card to indicate non-mana activated abilities removed (0-3), all activated abilities removed (4-7), and all
  * abilities removed (8-11).  Just in case one of these types of removal is imposed 16 times. */
 
+/* Legacy callers need the suppression category, not just a boolean.
+ * The three nibbles encode nonmana activations, all activations, and
+ * all abilities respectively.  Return 4 for full humiliation so that
+ * older upkeep-effect callers retain their explicit == 4 checks. */
+int get_forbid_activation_flag(int player, int card)
+{
+  if (player < 0 || player > 1 || card < 0)
+    return 0;
+  card_instance_t* instance = get_card_instance(player, card);
+  int flags = instance->targets[17].card;
+  if (flags <= 0)
+    return 0;
+  if (flags & 0xF00)
+    return 4;
+  if (flags & 0xF0)
+    return 2;
+  if (flags & 0xF)
+    return 1;
+  return 0;
+}
+
 int can_use_activated_abilities(int player, int card)
 {
   card_instance_t* instance = get_card_instance(player, card);

@@ -3418,7 +3418,7 @@ int card_immobilizer_eldrazi(int player, int card, event_t event){
 
 	if( event == EVENT_CAN_ACTIVATE ){
 		if( has_colorless_only_mana(player, 1) &&
-			generic_activated_ability(player, card, event, GAA_CAN_TARGET, MANACOST_X(3), 0, NULL, NULL) )
+			generic_activated_ability(player, card, event, 0, MANACOST_X(3), 0, NULL, NULL) )
 		{
 			return 1;
 		}
@@ -3429,7 +3429,7 @@ int card_immobilizer_eldrazi(int player, int card, event_t event){
 			spell_fizzled = 1;
 			return 0;
 		}
-		return generic_activated_ability(player, card, event, GAA_CAN_TARGET, MANACOST_X(2), 0, NULL, NULL);
+		return generic_activated_ability(player, card, event, 0, MANACOST_X(2), 0, NULL, NULL);
 	}
 
 	if( event == EVENT_RESOLVE_ACTIVATION ){

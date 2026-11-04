@@ -6,8 +6,8 @@ int card_illusions_of_grandeur(int player, int card, event_t event){
 
       if( current_turn == player && upkeep_trigger(player, card, event) ){
           int kill = 1;
-          add_ccounter(player, card);
-          int amount = count_ccounters(player, card);
+          add_counter(player, card, COUNTER_AGE);
+          int amount = count_counters(player, card, COUNTER_AGE);
           if( has_mana( player, COLOR_COLORLESS, amount *2) ){
               int choice = do_dialog(player, player, card, -1, -1, " Pay Cumulative Upkeep\n Pass", 0);
               if( choice == 0 ){

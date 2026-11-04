@@ -8,7 +8,7 @@ int card_elemental_token(int player, int card, event_t event){
 
     // Rakka Mar Tokens
 	if(get_special_infos(player, card) == 141 ){
-		haste(player, card);
+		haste(player, card, event);
 		modify_pt_and_abilities(player, card, event, 3, 1, 0);
 	}
 	else if( get_special_infos(player, card) > 0 && get_special_infos(player, card) < 100 ){
@@ -103,7 +103,7 @@ int pick_creature_in_a_graveyard(int player, int card, int mandatory, int curren
         }
     }
 	if( selected > -1 ){
-		int *grave = graveyard_ptr[instance->targets[0].player];
+		const int *grave = get_grave(instance->targets[0].player);
 		instance->targets[10].player = grave[selected];
 		instance->targets[10].card = selected;
 	}
@@ -365,10 +365,10 @@ int card_magus_of_the_scroll(int player, int card, event_t event){
 				new_default_test_definition(&this_test, TYPE_ANY, msg);
 				int selected = new_select_a_card(player, player, TUTOR_FROM_HAND, 1, AI_MIN_VALUE, -1, &this_test);
 				if( player == AI ){
-					reveal_card(HUMAN, player, card, player, selected, "AI Names...", 0);
+					reveal_card(player, card, player, selected);
 				}
 				int sel2 = get_random_card_in_hand(player);
-				reveal_card(player, player, card, player, sel2, "You revealed...", 0);
+				reveal_card(player, card, player, sel2);
 				if( sel2 == selected ){
 					damage_creature_or_player(player, card, event, 2);
 				}
@@ -458,24 +458,11 @@ int card_arboria(int player, int card, event_t event){
 		instance->targets[2].player = 1;
 	}
 
-	// You can only be attacked if you are not safe
-    if( trigger_condition == TRIGGER_DECLARE_ATTACK && current_phase == PHASE_DECLARE_ATTACKERS ){
-        if( affect_me( trigger_cause_controller, trigger_cause ) && reason_for_trigger_controller == affected_card_controller ){
-			int trig = 0;
-			if( instance->targets[(1-current_turn)+1].player == 1 ){
-				trig = 1;
-			}
-			if( trig == 1 ){
-                if(event == EVENT_TRIGGER){
-                   event_result |= 2;
-                }
-                else if( event == EVENT_RESOLVE_TRIGGER){
-                         forbid_attack = 1;
-                }
-			}
-        }
-    }
-
+	// Apply the restriction at the attack legality event, not a missing trigger.
+	if( event == EVENT_ATTACK_LEGALITY && affected_card_controller == current_turn
+		&& instance->targets[(1-current_turn)+1].player == 1 ){
+		forbid_attack = 1;
+	}
 
 	// Reset "safeness" each turn
 	if( current_phase == PHASE_UNTAP ){
@@ -544,7 +531,7 @@ int effect_exile_at_eot(int player, int card, event_t event ){
     card_instance_t *instance = get_card_instance(player, card);
     int p = instance->targets[0].player;
     int c = instance->targets[0].card;
-	haste(p, c);
+	haste(p, c, event);
     if( current_turn == player && eot_trigger(player, card, event) ){
 		kill_card(p, c, KILL_REMOVE);
     	kill_card(player, card, KILL_REMOVE);
@@ -557,26 +544,11 @@ int card_teferis_moat(int player, int card, event_t event){
 	if( event == EVENT_RESOLVE_SPELL && affect_me(player, card) ){
 		 instance->info_slot = select_a_color(player);
 	}
-	if( event == EVENT_ATTACK_LEGALITY && current_turn == 1-player ){
-		if( trigger_condition == TRIGGER_DECLARE_ATTACK && current_phase == PHASE_DECLARE_ATTACKERS ){
-			if( affect_me( trigger_cause_controller, trigger_cause ) && 
-				reason_for_trigger_controller == affected_card_controller
-			  ){
-				int trig = 0;
-				if( get_color(trigger_cause_controller, trigger_cause) & instance->info_slot ){
-					trig = 1;
-				}
-				if( trig == 1 ){
-					if(event == EVENT_TRIGGER){
-						event_result |= 2;
-					}
-					else if(event == EVENT_RESOLVE_TRIGGER){
-							forbid_attack = 1;
-					}
-				}
-			}
-		}
-    }
+	if( event == EVENT_ATTACK_LEGALITY && current_turn == 1-player
+		&& affected_card_controller == current_turn
+		&& (get_color(affected_card_controller, affected_card) & instance->info_slot) ){
+		forbid_attack = 1;
+	}
     return global_enchantment(player, card, event);
 }
 

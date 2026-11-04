@@ -278,6 +278,19 @@ _card_river_boa = 0x0040D650;
 _card_ghazban_ogre = 0x00452D40;
 _card_relic_bind = 0x004B7310;
 _card_assembly_worker_exe = 0x47AE00;
+/* Original Magic.exe card entry points, recorded alongside the wrappers in recoded_cards.c.
+ * These must be validated against the patched executable before runtime deployment. */
+_card_time_walk_exe = 0x0041B710;
+_card_demonic_tutor_exe = 0x0041D7C0;
+/* Additional original entry points noted in recoded_cards.c; runtime unverified. */
+_card_rock_hydra_exe = 0x00454ED0;
+_card_giant_spider_exe = 0x004C7D10;
+/* Legacy executable addresses; linkage experiment, not runtime validation. */
+_card_battering_ram_exe = 0x00422CC0;
+_card_tawnoss_weaponry = 0x00422950;
+/* Ashnod's Transmogrant: source comment 0x044E240 (normalized 32-bit address). */
+/* Linker-only experiment; confirm bytes and function entry in the original Magic.exe. */
+_card_ashnods_trasmogrant_exe = 0x0044E240;
 
 /*
 _card_aladdin_exe = 0x450F90;

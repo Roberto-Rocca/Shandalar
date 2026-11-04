@@ -1,0 +1,89 @@
+# Shandalar — regression test register
+
+This file is the durable project record for changes reviewed in the recent diagnostic sessions. Test with the exact patched Magic.exe used by the project. A successful linker result is not gameplay validation.
+
+## Classic card source ownership (public handler from recoded_cards.c)
+
+| Card | Intervention | Status / specific checks |
+| --- | --- | --- |
+| Time Walk | Renamed conflicting Unlimited implementation; original executable address binding added | Test extra turn and Stranglehold |
+| Rock Hydra | Renamed conflicting Unlimited implementation; original executable address binding added | Test X counters, damage prevention, upkeep activation and AI |
+| Volcanic Eruption | Renamed conflicting Unlimited implementation | Test land targets, subtype-changing effects, spell copying and Gaddock Teeg |
+| Raise Dead | Renamed conflicting Unlimited implementation | Test selecting creatures from graveyard, shroud and resolution |
+
+## Original-executable address / wrapper experiments
+
+| Card | Intervention | Status / specific checks |
+| --- | --- | --- |
+| Demonic Tutor | Original EXE entry point added to linker script | Test tutor selection and Stranglehold |
+| Giant Spider | Original EXE entry point added | Test blocking and special ability handling |
+| Battering Ram | Original EXE entry point added | Test combat-phase banding |
+| Tawnos's Weaponry | Original EXE function/symbol binding added | Test activated effects and calling convention |
+| Ashnod's Transmogrant | Original EXE entry point added | Test activation and counters |
+| Pentavite | Earlier diagnostic substituted an unavailable `is_aura` helper with an explicit aura subtype check | Test the relevant Pentavite interaction; review historical commit to identify complete behavior context |
+
+## Batch generated changes
+
+The CI artifact `recoded-batch-renames.csv` from the bulk diagnostic build lists every *additional* card symbol with an isolated alternative implementation. Merge that list into regression coverage after confirming that the build's source ownership and dispatch are correct.
+
+## Important distinctions
+
+- Items above are confirmed from the available project conversation and examined commits; this is not asserted to be an exhaustive record of every earlier experiment.
+- `src/cards/recoded_cards.c` is the preferred handler when a duplicate is present there.
+- Legacy handlers are preserved in repository sources; batch names are altered in the CI checkout only.
+- Check `CSV/Magic.exe.Cards.csv`, Manalink dispatch IDs and the patched Magic.exe addresses before declaring a card fixed.
+- Runtime validation remains pending for every card listed here.
+
+## Unresolved-symbol regression targets (run 41420176092)
+
+The automated source-candidate scan completed on 214 source/header files. Its candidate list is **not** evidence that similarly named functions are ABI-compatible.
+
+| Card / subsystem | Missing symbol | What to check before patching |
+| --- | --- | --- |
+| Wall of Roots | `add_0_minus1_counters` | Uses 0/-1 counters rather than -1/-1 counters; validate exact counter type and once-per-turn mana activation |
+| Dryad Arbor | `colored_artifact` | Suspicious call: Dryad Arbor is a green land creature, **not an artifact**; review intent rather than inventing an alias |
+| Animate Dead | `hack_animate_dead_player`, `hack_animate_dead_card` | Locate original storage and lifetime before replacing globals |
+| Goblin Shrine | `card_goblin_shrine_exe` | Confirm EXE entry point and correct patched binary before any linker mapping |
+| Fork | `card_fork_orig` | Confirm original dispatch and copied spell behavior before mapping |
+| Other card damage interactions | `damage_dealt_to_me` | Compare existing `damage_dealt_to_me_arbitrary` signature and trigger semantics |
+| Artifact/card play effect | `can_legally_play` | Determine whether stored identifier is internal card ID, CSV ID, or something else before using `can_legally_play_iid` |
+| Black sorcery effect | `effect_coercion` | Compare effect semantics with `new_effect_coercion` and its parameter structs |
+
+All items remain **untested in gameplay**. The batch owner selection is temporary in CI and requires dispatch/EXE validation.
+
+## 2026-11-02 — targeted Dryad Arbor source correction
+
+- Removed the call to undefined `colored_artifact()` from `card_dryad_arbor()` in `src/cards/lands.c`. Dryad Arbor is a green land creature, not an artifact.
+- Preserved `mana_producer_fixed(..., COLOR_GREEN)`; no other event handling changed.
+- **Validate in-game**: green color, land + creature types, summoning sickness, green mana production, interactions with artifact-only effects. Card data must be checked separately.
+- Upstream cross-check: `ShandalarMagic/Shandalar` retains this unresolved call, so this is a reasoned corrective divergence, **not** a verbatim upstream reconstruction.
+
+## 2026-11-02 — Wall of Roots counter correction
+
+- Replaced unavailable `add_0_minus1_counters(player, card, 1)` with `add_counters(player, card, COUNTER_M0_M1, 1)`, using the existing exact `COUNTER_M0_M1` enum in `src/defs.h`.
+- Verify -0/-1 counter accumulation, toughness updates, mana timing and once-per-turn activation, especially across turn boundaries. Compilation is not gameplay validation.
+
+## 2026-11-02 — Isochron Scepter legality-check correction
+
+- Replaced missing `can_legally_play(player, instance->info_slot)` with existing `can_legally_play_iid(player, instance->info_slot)` in `src/cards/artifacts.c`.
+- **Semantic assumption requiring verification:** the identifier returned by `new_global_tutor(..., TUTOR_FROM_HAND, TUTOR_RFG, ...)` and stored in `info_slot` is an internal card ID, not a CSV ID. Verify by inspecting implementation and by testing imprinted instants under casting restrictions.
+- Test artifact imprint, legal casting, activation with two mana, copy on stack, and effects that prohibit casting. This change fixes an unresolved reference only if the ID assumption holds.
+
+## 2026-11-02 — Unmask reconstruction
+
+- Replaced undefined legacy `effect_coercion()` with `default_ec_definition()` + `new_effect_coercion()` in `card_unmask()`.
+- Test filter `TYPE_LAND` / `DOESNT_MATCH`, reveal entire target hand, player choice, discarding exactly one **nonland** card; no discard when hand contains only lands; spell alternative pitch cost and cancellation.
+- Compare actual behavior with oracle/rules and upstream; semantic validation remains pending.
+
+## 2026-11-02 — Fork binary reconstruction
+
+- Removed undefined `card_fork_orig` and reconstructed the original `twincast()` call using pointer `&instance->targets[2].player` (COFF `_card_fork` offset `0x88`; struct `targets` begins at `0x74`).
+- Preserved original `EVENT_SET_COLOR` red marking, `EVENT_RESOLVE_SPELL` kill and this fork's explicit prohibition on copying creature spells.
+- Test casting against instants/sorceries, target/retarget choices, copied spells resolving, fizzling, colors and stack behavior; assembly-level evidence does not replace gameplay validation.
+
+## 2026-11-02 — four-symbol batched repair (experimental)
+
+- **Goblin Shrine / Goblin Caves**: replaced missing `card_goblin_shrine_exe` with `targeted_aura(... TYPE_LAND ...)` in the two affected paths, guided by original `_card_goblin_shrine` disassembly (the original calls `_targeted_aura`). Test enchant-target legality, Mountain-only bonus, leaving-play damage, and Goblin Caves' toughness bonus. Note: targeting restrictions may need further adjustment to match original behavior.
+- **Animate Dead**: replaced two unresolved `extern int hack_animate_dead_*` declarations with initialized DLL-local definitions. **Risk:** shared-state interaction with the original EXE is not yet established. Test opponent graveyard choice, reanimation attachments, transitions, and creature death/sacrifice; zero unresolved does not demonstrate ABI correctness.
+- **Illusionary Mask**: replaced missing `damage_dealt_to_me` with existing `damage_dealt_to_me_arbitrary(..., player, card)` so damage bookkeeping uses the legacy effect as triggering owner. **Risk:** inspect the old/new damage event timing and targets[6]/[7] side effects; verify when the masked card turns face up and interaction with damage/tapping/attacking.
+- These changes are committed together for **one linker build only**. Treat them as provisional until runtime regression testing.

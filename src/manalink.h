@@ -316,7 +316,6 @@ void produce_mana(int, int, int);
 void real_lose_the_game(int);
 int real_put_into_play(int, int);
 int raw_put_iid_on_top_of_deck(int player, int iid);	// Put a newly-created card with internal_card_id iid on top of player's library.
-int sprintf(char *str, const char *format, ...);
 int rearrange_top_3(int, int, event_t);
 void redraw_libraries(void);
 int regenerate(int, int, event_t, int, int);
@@ -866,6 +865,7 @@ int m10_lands(int player, int card, event_t event, int, int);
 int boost_creature_by_color(int player, int card, event_t event, int, int, int, int, bct_t flags);
 void modify_pt_and_abilities(int player, int card, event_t event, int, int, int);
 void nice_creature_to_sacrifice(int player, int card);
+int get_forbid_activation_flag(int player, int card);
 int can_use_activated_abilities(int player, int card);
 int can_use_activated_abilities_by_instance(card_instance_t* instance);
 int can_produce_mana(int player, int card);

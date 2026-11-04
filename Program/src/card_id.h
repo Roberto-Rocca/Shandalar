@@ -15641,7 +15641,53 @@ typedef enum
   CARD_ID_ZOMBIE                        =15714,
   CARD_ID_ZOMBIE_GIANT                  =15715,
   CARD_ID_ZOMBIE_HORROR                 =15716,
-  CARD_ID_ZOMBIE_WIZARD                 =15717
+  CARD_ID_ZOMBIE_WIZARD                 =15717,
+  /* Provisional post-legacy IDs. No matching .dat records yet; diagnostic build only. */
+  CARD_ID_KOZILEKS_RETURN               =20000,
+  CARD_ID_PRIZED_AMALGAM                =20001,
+  /* Historical CSV identifies Wastes as 15719; unused in this header. */
+  CARD_ID_WASTES                        =15719,
+  /* Temporary unique IDs for diagnostic compilation; .dat records not generated. */
+  CARD_ID_ELDRAZI_HORROR                     =20002,
+  CARD_ID_HUMAN_SOLDIER                      =20003,
+  CARD_ID_HUMAN_WIZARD                       =20004,
+  CARD_ID_TAKE_INVENTORY                     =20005,
+  CARD_ID_TREE_OF_PERDITION                  =20006,
+  CARD_ID_DEVIL                              =20007,
+  CARD_ID_BOUND_BY_MOONSILVER                =20008,
+  CARD_ID_STONE_HAVEN_OUTFITTER              =20009,
+  CARD_ID_SIFTER_OF_SKULLS                   =20010,
+  CARD_ID_KALITAS_TRAITOR_OF_GHET            =20011,
+  CARD_ID_GLADEHART_CAVALRY                  =20012,
+  /* Provisional Shadows over Innistrad identifiers; database synchronization pending. */
+  CARD_ID_CLUE                                   =20013,
+  CARD_ID_ERDWAL_ILLUMINATOR                     =20014,
+  CARD_ID_HUMAN_CLERIC                           =20015,
+  CARD_ID_WAYWARD_DISCIPLE                       =20016,
+  CARD_ID_JACE_UNRAVELER_OF_SECRETS_EMBLEM       =20017,
+  CARD_ID_VAMPIRE_KNIGHT                         =20018,
+  /* Diagnostic IDs only: database records and token metadata still required. */
+  CARD_ID_ARLINN_EMBRACED_BY_THE_MOON_EMBLEM       =20019,
+  CARD_ID_CARNIVORE                                =20020,
+  CARD_ID_FAITH_UNBROKEN                           =20021,
+  CARD_ID_ARLINN_KORD                              =20022,
+  CARD_ID_ARLINN_EMBRACED_BY_THE_MOON              =20023,
+  CARD_ID_CHANDRA_FLAMECALLER                      =20024,
+  CARD_ID_JACE_UNRAVELER_OF_SECRETS                =20025,
+  CARD_ID_LILIANA_THE_LAST_HOPE                    =20026,
+  CARD_ID_NAHIRI_THE_HARBINGER                     =20027,
+  CARD_ID_NISSA_VOICE_OF_ZENDIKAR                  =20028,
+  CARD_ID_SORIN_GRIM_NEMESIS                       =20029,
+  CARD_ID_TAMIYO_FIELD_RESEARCHER                  =20030,
+  CARD_ID_BURN_FROM_WITHIN                         =20031,
+  CARD_ID_STITCHERS_GRAFT                          =20032,
+  /* Additional build-only IDs; matching database records still pending. */
+  CARD_ID_LONG_ROAD_HOME                           =20033,
+  CARD_ID_MINA_AND_DENN_WILDBORN                   =20034,
+  CARD_ID_THE_GITROG_MONSTER                       =20035,
+  CARD_ID_GEIST_FUELED_SCARECROW                   =20036,
+  CARD_ID_KRALLENHORDE_HOWLER                      =20037,
+  CARD_ID_FALKENRATH_GORGER                        =20038
 } card_id_t;
 
 #endif

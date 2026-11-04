@@ -1,0 +1,180 @@
+name: Shandalar 32-bit build diagnostic
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - diagnostics/32bit-build
+    paths:
+      - tools/run-diagnostic-build.txt
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install 32-bit Windows toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make mingw-w64 yasm binutils-mingw-w64-i686
+
+      - name: Inspect files and compiler versions
+        shell: bash
+        run: |
+          set -eu
+          i686-w64-mingw32-gcc --version | head -n 1
+          i686-w64-mingw32-g++ --version | head -n 1
+          yasm --version | head -n 1
+          echo "Possible generated headers:"
+          find . -iname 'card_id.h' -o -iname '*csv2dat*' -o -iname 'makecsv2dat*' | head -n 100
+          echo "Source build inputs:"
+          ls -la src/Makefile* src/*.def
+
+      - name: Resolve card_id.h if available
+        shell: bash
+        run: |
+          set -eu
+          if [ ! -f src/card_id.h ]; then
+            found="$(find . -type f -name card_id.h -not -path './src/card_id.h' -print -quit)"
+            if [ -n "$found" ]; then
+              cp "$found" src/card_id.h
+              echo "Copied $found to src/card_id.h"
+            else
+              echo "::warning::card_id.h not found; compilation will reveal dependent failures"
+            fi
+          fi
+
+      - name: Audit legacy card IDs and CSV layout
+        run: |
+          python3 tools/audit_card_ids.py | tee card-id-audit.log
+
+      - name: Audit token IDs against available game databases
+        run: python3 tools/audit_token_id_mapping.py | tee token-id-audit.log
+
+      - name: Audit absolute NASM calls
+        run: python3 tools/audit_absolute_asm_calls.py
+
+      - name: Isolate recoded card duplicate symbols in batch
+        run: python3 tools/isolate_recoded_duplicates.py
+
+      - name: Experimentally isolate remaining card duplicates
+        run: python3 tools/isolate_remaining_card_duplicates.py
+
+      - name: Isolate remaining shared helper symbols
+        run: python3 tools/isolate_remaining_helpers.py
+
+      - name: Attempt 32-bit build and retain error log
+        shell: bash
+        run: |
+          set +e
+          # Preserve diagnostics, but do not block on legacy warnings under modern GCC.
+          make -C src -k -j2 \
+            COMMONFLAGS='-O2 -ggdb2 -march=i586 -mpreferred-stack-boundary=2 -fno-omit-frame-pointer -Wall -Wextra -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings -Wshadow -W -Winline -Wno-unused-parameter -Wno-error -fcommon -I.. -I.' \
+            CC=i686-w64-mingw32-gcc \
+            CXX=i686-w64-mingw32-g++ \
+            OBJCOPY=i686-w64-mingw32-objcopy \
+            DLLTOOL=i686-w64-mingw32-dlltool \
+            > build.log 2>&1
+          code=$?
+          echo "Build exit code: $code"
+          echo "First 120 lines:"
+          head -n 120 build.log
+          echo "Compiler/linker errors (with context):"
+          grep -n -E "(fatal error:|error:|undefined reference|No rule to make target|collect2:|ld:)" build.log || true
+          echo "Total compiler errors:"
+          grep -c -E "(fatal error:|error:)" build.log || true
+          echo "Last 120 lines:"
+          tail -n 120 build.log
+          echo "exit_code=$code" >> "$GITHUB_ENV"
+
+      - name: Audit duplicate and unresolved linker symbols
+        if: always()
+        shell: bash
+        run: |
+          if [ -f build.log ]; then
+            python3 tools/audit_linker_symbols.py build.log linker-symbol-audit.json
+            python3 tools/audit_unresolved_calls.py build.log unresolved-call-sites.csv
+            python3 tools/audit_unresolved_candidates.py
+            python3 tools/audit_exe_symbol_provenance.py
+            # The batch report captures recoded ownership; the older
+            # diagnostic expects duplicate errors and is not applicable here.
+          fi
+
+      - name: Inspect linked PE and export table
+        if: success()
+        shell: bash
+        run: |
+          file src/ManalinkEh.dll | tee pe-inspection.txt
+          i686-w64-mingw32-objdump -f src/ManalinkEh.dll >> pe-inspection.txt
+          i686-w64-mingw32-objdump -p src/ManalinkEh.dll >> pe-inspection.txt
+          i686-w64-mingw32-objdump -h src/ManalinkEh.dll >> pe-inspection.txt
+          test -s src/ManalinkEh.dll
+          grep -q "pei-i386" pe-inspection.txt
+          # Original known-working DLL has DllCharacteristics=0x0000.
+          grep -Eq "DllCharacteristics[[:space:]]+00000000" pe-inspection.txt
+
+      - name: Diagnose pre-menu crash address
+        if: success()
+        shell: bash
+        run: |
+          set -eu
+          {
+            echo "Reported Windows exception: 0xc0000005 at 0x0200a9e9 (module unknown)"
+            echo "The reported address is meaningful only if the DLL was actually loaded at 0x02000000."
+            echo "=== DLL headers, image base and imports ==="
+            i686-w64-mingw32-objdump -p src/ManalinkEh.dll
+            echo "=== DLL section table ==="
+            i686-w64-mingw32-objdump -h src/ManalinkEh.dll
+            echo "=== Symbols near reported address (separate debug file) ==="
+            i686-w64-mingw32-nm -n src/ManalinkEh.dbg | grep -i -B 12 -A 12 '0200a9e9' || true
+            echo "=== DWARF location for reported address ==="
+            i686-w64-mingw32-addr2line -e src/ManalinkEh.dbg -f -C 0x0200a9e9 || true
+            echo "=== Disassembly near reported address ==="
+            i686-w64-mingw32-objdump -d -C --start-address=0x0200a980 --stop-address=0x0200aa60 src/ManalinkEh.dbg || true
+          } > crash-address-diagnostic.txt 2>&1
+
+      - name: Upload compiled DLL and debug symbols
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shandalar-diagnostic-dll
+          path: |
+            src/ManalinkEh.dll
+            src/ManalinkEh.dbg
+            pe-inspection.txt
+            crash-address-diagnostic.txt
+          if-no-files-found: error
+
+      - name: Upload diagnostic log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shandalar-build-log
+          path: |
+            build.log
+            card-id-audit.log
+            token-id-audit.log
+            card-id-audit.json
+            linker-symbol-audit.json
+            linker-symbol-audit.csv
+            linker-duplicate-file-pairs.csv
+            recoded-ownership-audit.csv
+            recoded-batch-renames.csv
+            experimental-card-ownership.csv
+            experimental-helper-ownership.csv
+            unresolved-call-sites.csv
+            unresolved-symbol-candidates.csv
+            exe-symbol-provenance.csv
+          if-no-files-found: warn
+
+      - name: Report result
+        shell: bash
+        run: |
+          if [ "${exit_code:-1}" != 0 ]; then
+            echo "::error::Compilation failed; download shandalar-build-log for the first errors."
+            exit 1
+          fi
+          file src/ManalinkEh.dll

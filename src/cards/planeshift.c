@@ -1218,11 +1218,11 @@ int card_orims_chant(int player, int card, event_t event){
 	card_instance_t *instance = get_card_instance(player, card);
 
 	if( event == EVENT_CAN_CAST ){
-		return generic_spell(player, card, event, GS_CAN_TARGET, &td, NULL, 1, NULL);
+		return generic_spell(player, card, event, GS_CAN_TARGET, &td, "TARGET_PLAYER", 1, NULL);
 	}
 
 	if( event == EVENT_CAST_SPELL && affect_me(player, card) ){
-		generic_spell(player, card, event, GS_CAN_TARGET, &td, NULL, 1, NULL);
+		generic_spell(player, card, event, GS_CAN_TARGET, &td, "TARGET_PLAYER", 1, NULL);
 		if( spell_fizzled != 1 ){
 			if( ! is_token(player, card) ){
 				do_kicker(player, card, MANACOST_W(1));
@@ -1289,7 +1289,7 @@ int card_primal_growth(int player, int card, event_t event){
 	/*
 	  Primal Growth |2|G
 	  Sorcery, 2G
-	  Kicker — Sacrifice a creature. (You may sacrifice a creature in addition to any other costs as you cast this spell.)
+	  Kicker Â— Sacrifice a creature. (You may sacrifice a creature in addition to any other costs as you cast this spell.)
 	  Search your library for a basic land card, put that card onto the battlefield, then shuffle your library.
 	  If Primal Growth was kicked, instead search your library for up to two basic land cards, put them onto the battlefield,
 	  then shuffle your library.

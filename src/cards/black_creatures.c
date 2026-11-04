@@ -54,7 +54,7 @@ int card_horobi_deaths_wail(int player, int card, event_t event){
 int card_swamp_mosquito(int player, int card, event_t event){
     if( event == EVENT_DECLARE_BLOCKERS ){
         if( is_unblocked(player, card) ){
-            poison_counters[1-player]++;
+            poison(1-player, 1);
         }
     }
     return 0;
@@ -89,7 +89,7 @@ void dark_confidant_effect(int player, int card, int t_player){
 		remove_card_from_deck( t_player, 0 );
 		int cmc = get_cmc(t_player, card_added);
 		lose_life(t_player, cmc);
-		reveal_card(HUMAN, player, card, t_player, card_added, "Reveals", 0);
+		reveal_card(player, card, t_player, card_added);
 	}
 }
 
@@ -250,7 +250,7 @@ int card_hells_caretaker(int player, int card, event_t event){
 			int selected = new_select_target_from_grave(player, card, player, 0, AI_MAX_CMC, &this_test, 0);
 			if( selected != -1 ){
 				if( sacrifice(player, card, player, 0, TYPE_CREATURE, 0, 0, 0, 0, 0, 0, 0, -1, 0) ){
-					int *grave = graveyard_ptr[player];
+					const int *grave = get_grave(player);
 					instance->targets[1].player = selected;
 					instance->targets[1].card = grave[selected];
 					tap_card(player, card);
@@ -268,7 +268,7 @@ int card_hells_caretaker(int player, int card, event_t event){
 	if( event == EVENT_RESOLVE_ACTIVATION ){
 		int selected = validate_target_from_grave(player, card, player, 1);
 		if( selected != -1 ){
-			reanimate_permanent(player, card, player, selected, 0, 0);
+			reanimate_permanent(player, card, player, selected, 0);
 		}
 	}
 
@@ -276,11 +276,11 @@ int card_hells_caretaker(int player, int card, event_t event){
 }
 
 int card_ashen_ghoul(int player, int card, event_t event){
-  haste(player, card);
+  haste(player, card, event);
 
   if( event == EVENT_GRAVEYARD_ABILITY_UPKEEP ){
      int position = 0;
-     int *graveyard = graveyard_ptr[player];
+     const int *graveyard = get_grave(player);
      int victims = 0;
      int count = count_graveyard(player) - 1;
      while( count > -1 ){
@@ -315,11 +315,11 @@ int card_ashen_ghoul(int player, int card, event_t event){
 }
 
 int card_nshadow(int player, int card, event_t event){
-  haste(player, card);
+  haste(player, card, event);
 
   if( event == EVENT_GRAVEYARD_ABILITY_UPKEEP ){
      int position = 0;
-     int *graveyard = graveyard_ptr[player];
+     const int *graveyard = get_grave(player);
      int victims = 0;
      int count = count_graveyard(player) - 1;
      while( count > -1 ){

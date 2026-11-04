@@ -83,25 +83,25 @@ int card_goblin_tutor(int player, int card, event_t event){
         int roll = internal_rand(6) + 1;
         int type = 0;;
         if( roll == 1 ){
-            reveal_card(player, player, card, player, card, "You rolled 1, no effect", 1);
+            reveal_card(player, card, player, card);
         }
         else if( roll == 2 ){
-            reveal_card(player, player, card, player, card, "You rolled 2, search for Goblin Tutor", 1);
+            reveal_card(player, card, player, card);
         }
         else if( roll == 3 ){
-            reveal_card(player, player, card, player, card, "You rolled 3, find an Enchantment", 1);
+            reveal_card(player, card, player, card);
             type = TYPE_ENCHANTMENT;
         }
         else if( roll == 4 ){
-            reveal_card(player, player, card, player, card, "You rolled 4, find an Artifact", 1);
+            reveal_card(player, card, player, card);
             type = TYPE_ARTIFACT;
         }
         else if( roll == 5 ){
-            reveal_card(player, player, card, player, card, "You rolled 5, find a Creature", 1);
+            reveal_card(player, card, player, card);
             type = TYPE_CREATURE;
         }
         else if( roll == 6 ){
-            reveal_card(player, player, card, player, card, "You rolled 6, find an Instant or Sorcery", 1);
+            reveal_card(player, card, player, card);
             type = TYPE_INSTANT | TYPE_SORCERY | TYPE_INTERRUPT;
         }
 
@@ -167,15 +167,31 @@ int card_obliterate(int player, int card, event_t event){
 }
 
 int card_fork(int player, int card, event_t event){
-    int result =  card_fork_orig(player, card, event);
-    if(event == EVENT_CAN_CAST ){
-        if( result == 0 ){
-            return 0;
-        }
+    /* Reconstructed from the original ManalinkEh.dll's _card_fork:
+     * the fifth twincast argument points to card_instance_t offset 0x88,
+     * which is targets[2].player in src/defs.h. */
+    card_instance_t* instance = get_card_instance(player, card);
+    int result;
+
+    if (event == EVENT_SET_COLOR &&
+        instance->targets[2].player != -1 &&
+        instance->targets[2].player == affected_card &&
+        player == affected_card_controller){
+        event_result = COLOR_TEST_RED;
+    }
+
+    result = twincast(player, card, event, NULL, &instance->targets[2].player);
+
+    /* Preserve the extra noncreature restriction in this fork's source. */
+    if (event == EVENT_CAN_CAST && result){
         card_data_t* card_d = get_card_data(card_on_stack_controller, card_on_stack);
-        if( card_d->type & TYPE_CREATURE ){
+        if (card_d->type & TYPE_CREATURE){
             return 0;
         }
+    }
+
+    if (event == EVENT_RESOLVE_SPELL){
+        kill_card(player, card, KILL_DESTROY);
     }
     return result;
 }

@@ -33,7 +33,7 @@ int card_wall_of_roots(int player, int card, event_t event){
 
     if(event == EVENT_ACTIVATE ){
 		instance->info_slot = 1;
-		add_0_minus1_counters(player, card, 1);
+		add_counters(player, card, COUNTER_M0_M1, 1);
 		produce_mana(player, COLOR_GREEN, 1);
     }
 
@@ -127,7 +127,7 @@ int card_elvish_spirit_guide(int player, int card, event_t event){
         discard_card(player, card);
         rfg_card_from_grave(player, count_graveyard(player) - 1);
     }
-    else if( event == EVENT_REVOLVE_ACTIVATION_FROM_HAND ){
+    else if( event == EVENT_RESOLVE_ACTIVATION_FROM_HAND ){
         produce_mana(player, COLOR_GREEN, 1);
     }
     return 0;

@@ -88,7 +88,7 @@ int card_vedalken_shackles(int player, int card, event_t event){
     if( event == EVENT_RESOLVE_ACTIVATION ){
         td.power_requirement = count_subtype(player, TYPE_LAND, SUBTYPE_ISLAND) | TARGET_PT_LESSER_OR_EQUAL;
 		if( valid_target(&td) && in_play(instance->parent_controller, instance->parent_card) && is_tapped(instance->parent_controller, instance->parent_card)){
-			gain_control_until_source_is_in_play_and_tapped(player, instance->parent_card, instance->targets[0].player, instance->targets[0].card);
+			gain_control_until_source_is_in_play_and_tapped(player, instance->parent_card, instance->targets[0].player, instance->targets[0].card, GCUS_TAPPED);
         }
     }
 	return generic_activated_ability(player, card, event, GAA_UNTAPPED+GAA_NONSICK+GAA_CAN_TARGET, 2, 0, 0, 0, 0, 0, 0, &td, "TARGET_CREATURE");
@@ -184,6 +184,15 @@ int card_jesters_cap(int player, int card, event_t event){
     return generic_activated_ability(player, card, event, GAA_UNTAPPED+GAA_NONSICK+GAA_CAN_TARGET+GAA_SACRIFICE_ME, 2, 0, 0, 0, 0, 0, 0, &td1, "TARGET_PLAYER");
 }
 
+/* Card-cost checks receive CSV ids, while the color API accepts internal ids. */
+static int get_color_by_csv_id(int player, int csv_id){
+    int internal_id = get_internal_card_id_from_csv_id(csv_id);
+    if( internal_id < 0 ){
+        return 0;
+    }
+    return get_color_by_internal_id(player, internal_id);
+}
+
 int get_updated_casting_cost_exc_trinisphere(int player, int card, event_t event, int cless){
 	// Seriously?
 
@@ -204,7 +213,7 @@ int get_updated_casting_cost_exc_trinisphere(int player, int card, event_t event
 		cless = c->req_colorless;
 	}
 
-	int clr = get_color_by_id(player, id);
+	int clr = get_color_by_csv_id(player, id);
 
     int i;
     for(i=0; i<2; i++){
@@ -321,7 +330,7 @@ int get_updated_casting_cost_exc_trinisphere(int player, int card, event_t event
 				}
 
 				if( get_id(i, count) == CARD_ID_EYE_OF_UGIN && i == player && has_subtype_by_id(id, SUBTYPE_ELDRAZI) && 
-					get_color_by_id(player, id) == COLOR_TEST_COLORLESS
+					get_color_by_csv_id(player, id) == COLOR_TEST_COLORLESS
 				  ){
 					cless-=2;
 				}
@@ -336,7 +345,7 @@ int get_updated_casting_cost_exc_trinisphere(int player, int card, event_t event
 					}	
 				}
 
-				if( get_id(i, count) == CARD_ID_GLOOM && (get_color_by_id(player, id) & COLOR_TEST_WHITE)  ){
+				if( get_id(i, count) == CARD_ID_GLOOM && (get_color_by_csv_id(player, id) & COLOR_TEST_WHITE)  ){
 					cless+=3;
 				}
 
@@ -703,10 +712,10 @@ int card_aether_vial  (int player, int card, event_t event){
     td.zone = TARGET_ZONE_HAND;
 
 	char buffer[100];
-	scnprintf(buffer, 100, "Select a Creature with cmc %d.", count_ccounters(player, card));
+	scnprintf(buffer, 100, "Select a Creature with cmc %d.", count_counters(player, card, COUNTER_CHARGE));
 	test_definition_t this_test;
 	new_default_test_definition(&this_test, TYPE_CREATURE, buffer);
-	this_test.cmc = count_ccounters(player, card);
+	this_test.cmc = count_counters(player, card, COUNTER_CHARGE);
 	this_test.zone = TARGET_ZONE_HAND;
 			
 	upkeep_trigger_ability(player, card, event, player);	
@@ -714,15 +723,15 @@ int card_aether_vial  (int player, int card, event_t event){
 	if( event == EVENT_UPKEEP_TRIGGER_ABILITY ){
 			int AI_choice = 0;
 			int most_common_cmc = get_most_common_cmc_in_hand(player, TYPE_CREATURE);
-			if( count_ccounters(player, card) >= most_common_cmc ){
+			if( count_counters(player, card, COUNTER_CHARGE) >= most_common_cmc ){
 				AI_choice = 1;
 			}
 
 			char buffer2[50];
-			snprintf(buffer2, 50, " Add a Counter (currently at %d)\n Do not add",  count_ccounters(player, card));
+			snprintf(buffer2, 50, " Add a Counter (currently at %d)\n Do not add",  count_counters(player, card, COUNTER_CHARGE));
 			int choice = do_dialog(player, player, card, -1, -1, buffer2, AI_choice);
 			if( choice == 0 ){
-				add_ccounter(player, card);
+				add_counter(player, card, COUNTER_CHARGE);
 			}
 	}
 
@@ -757,7 +766,7 @@ int card_mind_stone(int player, int card, event_t event){
     if(event == EVENT_ACTIVATE ){
         int choice = 0;
 		int ai_choice = 0;
-		if( ! paying_mana() && count_permanents_by_type(player, card, TYPE_LAND) > 6  &&
+		if( ! paying_mana() && count_permanents_by_type(player, TYPE_LAND) > 6  &&
 			has_mana_for_activated_ability(player, card, 2, 0, 0, 0, 0, 0) 
 		  ){
 			ai_choice = 1;
@@ -796,7 +805,7 @@ int effect_illusionary_mask(int player, int card, event_t event){
 	if( instance->targets[0].player > -1 ){
 		if( (event == EVENT_TAP_CARD && is_attacking(instance->targets[0].player, instance->targets[0].card)) ||
 			damage_dealt_by_me(instance->targets[0].player, instance->targets[0].card, event, 0) ||
-			damage_dealt_to_me(instance->targets[0].player, instance->targets[0].card, event, 0)
+			damage_dealt_to_me_arbitrary(instance->targets[0].player, instance->targets[0].card, event, 0, player, card)
 		  ){
 			instance->targets[1].player = 66;
 			int i;
@@ -887,7 +896,7 @@ int card_isochron_scepter  (int player, int card, event_t event){
 		}
 	}
 
-    if( event == EVENT_CAN_ACTIVATE && instance->info_slot > 0 && can_legally_play(player, instance->info_slot ) ){
+    if( event == EVENT_CAN_ACTIVATE && instance->info_slot > 0 && can_legally_play_iid(player, instance->info_slot ) ){
 		return generic_activated_ability(player, card, event, GAA_UNTAPPED+GAA_NONSICK, 2, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
@@ -1132,7 +1141,7 @@ int card_myr_incubator( int player, int card, event_t event){
 			}
 		}
 
-		generate_tokens_by_id(player, CARD_ID_MYR, myr);
+		generate_tokens_by_id(player, card, CARD_ID_MYR, myr);
 		gain_life(player, 0);
 		shuffle(player);
 	}

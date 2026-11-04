@@ -29,7 +29,7 @@ _card_obelisk_of_alara:
 	; If it can use green mana, try to +4/+4, or cancel...
 	mov     dword [ebp-8], 5
 	; There is a creature?
-	call    0x4177a0
+	call dword [exe_target_4177a0]
 	test    eax, eax
 	jz      .0001aa
 	HaveManaOrJump 1, GreenMana, .0001aa
@@ -71,7 +71,7 @@ _card_obelisk_of_alara:
 	push    CardID
 	push    PlayerID
 	push    PlayerID
-	call    0x471eb0
+	call dword [exe_target_471eb0]
 	add     esp, 0x1c
 	; Recover Card Pointer Info
 	mov     CardInfoSlot1, eax
@@ -88,7 +88,7 @@ _card_obelisk_of_alara:
 	jne     .0001a	
 	LoadResource 0x4d75f8 ; Target a player... or cancel...
 	mov     edx, ResourceString1
-	call    0x41aea0
+	call dword [exe_target_41aea0]
 	test    eax, eax
 	jz     	.0001z
 .0001a:	
@@ -98,12 +98,12 @@ _card_obelisk_of_alara:
 	jne     .0001c	
 .0001b:
 	; Target creature, if there is no one... open the select window again... (invalid option...)
-	call    0x4177a0
+	call dword [exe_target_4177a0]
 	test    eax, eax
 	jz      .0001
 	LoadResource 0x4d7696 ; Target a creature... or cancel...
 	mov     edx, ResourceString1
-	call    0x4197a0
+	call dword [exe_target_4197a0]
 	test    eax, eax
 	jz      .0001z
 .0001c:
@@ -145,7 +145,7 @@ _card_obelisk_of_alara:
 	cmp     eax, 2
 	jne     .0002c
 	; Valid Target Yet?
-	call    0x419250
+	call dword [exe_target_419250]
 	test    eax, eax
 	jz      .endofproc1
 	;
@@ -155,14 +155,14 @@ _card_obelisk_of_alara:
 	push    dword [0x728370]
 	push    CardID
 	push    PlayerID
-	call    0x4a09a0
+	call dword [exe_target_4a09a0]
 	add     esp, 0x14
 	mov     ecx, eax
 	cmp     eax, -1
 	jz      .endofproc1
 	mov     eax, PlayerID
 	push    esi
-	call    0x401a80
+	call dword [exe_target_401a80]
 	mov     word [esi+0x12], 4
 	mov     word [esi+0x1c], 4
 	pop     esi
@@ -181,7 +181,7 @@ _card_obelisk_of_alara:
 	jne     .endofproc1
 	;
 	; Valid Target Yet?
-	call    0x419250
+	call dword [exe_target_419250]
 	test    eax, eax
 	jz      .endofproc1
 	;
@@ -191,14 +191,14 @@ _card_obelisk_of_alara:
 	push    dword [0x728370]
 	push    CardID
 	push    PlayerID
-	call    0x4a09a0
+	call dword [exe_target_4a09a0]
 	add     esp, 0x14
 	mov     ecx, eax
 	cmp     eax, -1
 	jz      .endofproc1
 	mov     eax, PlayerID
 	push    esi
-	call    0x401a80
+	call dword [exe_target_401a80]
 	mov     word [esi+0x12], -2
 	mov     word [esi+0x1c], -2
 	pop     esi
@@ -214,3 +214,12 @@ _card_obelisk_of_alara:
 section .data
 ObeliskOfAlaraStr1 db ' %s', 10, ' %s', 10, ' %s', 10, ' %s', 10, ' %s', 10, ' %s', 0
 ObeliskOfAlaraPrompt db 'OBELISKOFALARA', 0
+; Absolute Magic.exe entry points: indirect calls preserve all input registers.
+section .data
+exe_target_4177a0: dd 0x4177a0
+exe_target_471eb0: dd 0x471eb0
+exe_target_41aea0: dd 0x41aea0
+exe_target_4197a0: dd 0x4197a0
+exe_target_419250: dd 0x419250
+exe_target_4a09a0: dd 0x4a09a0
+exe_target_401a80: dd 0x401a80

@@ -2296,7 +2296,7 @@ static int effect_illusionary_mask(int player, int card, event_t event){
 	return 0;
 }
 
-int hack_illusionary_mask_event = EVENT_CAN_ACTIVATE;
+extern int hack_illusionary_mask_event;
 int card_illusionary_mask(int player, int card, event_t event){
 
 	char msg[100] = "Choose a creature card to play face down.";
@@ -3778,7 +3778,8 @@ int card_purelace(int player, int card, event_t event){
 
 // Raging River --> hardcoded, for now. Or Korath, you could do this if you want
 
-int card_raise_dead(int player, int card, event_t event){
+/* Legacy Raise Dead implementation retained; recoded_cards.c owns card_raise_dead. */
+int card_raise_dead_legacy_unlimited(int player, int card, event_t event){
 	if( ! IS_GS_EVENT(player, card, event) ){
 		return 0;
 	}
@@ -3906,7 +3907,8 @@ static const char* target_must_be_damage_targeting_this_rock_hydra(int who_choos
 		  : text_lines[1]);	// can only work because initial targeting uses text_lines[0] of same source
 }
 
-int card_rock_hydra(int player, int card, event_t event)
+/* Legacy Rock Hydra preserved; recoded_cards.c owns the public handler. */
+int card_rock_hydra_legacy_unlimited(int player, int card, event_t event)
 {
   // 00454ed0
 
@@ -4669,7 +4671,8 @@ int card_time_vault(int player, int card, event_t event)
   return generic_activated_ability(player, card, event, GAA_UNTAPPED, MANACOST_X(0), 0, NULL, NULL);
 }
 
-int card_time_walk(int player, int card, event_t event ){
+/* Legacy implementation retained for comparison; the recoded_cards.c handler owns card_time_walk. */
+int card_time_walk_legacy_unlimited(int player, int card, event_t event ){
 	// original code : 0041B710
 
 	if( event == EVENT_RESOLVE_SPELL ){
@@ -4919,7 +4922,9 @@ int card_veteran_bodyguard(int player, int card, event_t event){
 	return 0;
 }
 
-int card_volcanic_eruption(int player, int card, event_t event){
+/* Legacy implementation retained for regression testing of target selection and spell copies. */
+/* The public card_volcanic_eruption handler is owned by recoded_cards.c. */
+int card_volcanic_eruption_legacy_unlimited(int player, int card, event_t event){
 	// 0x41c4a0
 	if( ! IS_GS_EVENT(player, card, event) ){
 		return 0;

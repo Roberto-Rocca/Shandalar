@@ -1,9 +1,5 @@
 #include "manalink.h"
 
-int affect_me(int player, int card)
-{
-  if(player == affected_card_controller && card == affected_card ){
-    return 1;
-  }
-  return 0;
-}
+/* affect_me() is defined as static inline in manalink.h.
+ * Keep this translation unit for the legacy makefile without redefining it.
+ */
