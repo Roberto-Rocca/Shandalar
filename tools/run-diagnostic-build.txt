@@ -152,3 +152,5 @@ Fix direct absolute calls to Magic.exe evaluator 0x004352D0 in get_power/get_tou
 Diagnostic build request 52: audit all NASM direct numeric calls and use register-preserving indirect calls into Magic.exe.
 Diagnostic build request 53: correct Immobilizer Eldrazi target flag and guard null target definitions in generic activated ability.
 Diagnostic build request 54: read-only token ID to Cards.dat DBInfo.dat and Magic.exe.Cards.csv mapping audit.
+Diagnostic build request: Orim's Chant target selection null prompt regression fix
+Baseline c47c2229c74da1429f796de5666e083ec0c0ac79
