@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - diagnostics/32bit-build
+      - fix/orims-chant-null-prompt-20261104
     paths:
       - tools/run-diagnostic-build.txt
 
