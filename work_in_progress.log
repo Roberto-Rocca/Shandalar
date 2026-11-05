@@ -1,1 +1,51 @@
+# Shandalar - Work in progress
+Ultimo aggiornamento: 2026-11-05
+Scopo: riferimento sintetico e persistente per riprendere le analisi in nuove chat. Le indicazioni qui sotto derivano dalle conversazioni di progetto accessibili; le affermazioni non verificate direttamente nel codice o nei dump sono marcate come tali.
 
+## Riferimenti
+- Fork di lavoro: https://github.com/Roberto-Rocca/Shandalar
+- Progetto originario: https://github.com/ShandalarMagic/shandalar
+- Documentazione: https://slightlymagic.net/wiki/Shandalar ; https://slightlymagic.net/wiki/ManaLink_3.0
+- Procedura: modifiche piccole, verificabili, un problema per volta; non ripetere interi log o codice già analizzati; consultare solo file necessari; indicare commit e build precisi.
+
+## Stato verificato tramite resoconti dei test nelle chat
+- Esiste una DLL compilabile e utilizzata nei test sul gioco.
+- Obiettivo corrente: ampliare le carte giocabili e correggere il comportamento di Orim's Chant.
+- Orim's Chant: inizialmente problemi nel targeting; dopo una build dichiarata riuscita e un test nel gioco, il targeting funziona.
+- Orim's Chant: durante la fase di risoluzione il gioco continua a crashare. Il fatto che il targeting funzioni NON prova che la risoluzione sia corretta.
+- Nei precedenti interventi è stata segnalata una strategia utile per evitare regressioni: non eliminare indiscriminatamente le vecchie funzioni delle carte; se necessario rinominarle e implementare le nuove separatamente. Da applicare solo dopo verifica del caso concreto.
+
+## Cronologia essenziale e riferimenti di riproducibilità
+- 2026-11-03: crash di Orim's Chant riprodotto dopo il lancio della magia; acquisiti dump e log WinDbg in più prove.
+- Comandi WinDbg già eseguiti in una sessione di debug (risultato allegato alla chat del 2026-11-03):
+  .logopen /t C:\Temp\orims_chant_magic.txt
+  .ecxr
+  .exr -1
+  r
+  lmv m Magic
+  ? Magic+0x208f
+  ln Magic+0x208f
+  ub @eip L20
+  u @eip L30
+  dds @esp L40
+  kv 40
+  .logclose
+- Build storica di riferimento fornita dall'utente: https://github.com/Roberto-Rocca/Shandalar/actions/runs/41683314430
+- 2026-11-04: dopo intervento sulla DLL, build riuscita e targeting confermato funzionante dall'utente, ma crash in risoluzione; dump.dmp fornito.
+- Build dichiarata dall'utente come DLL in uso al 2026-11-05: https://github.com/Roberto-Rocca/Shandalar/actions/runs/41855928764
+- 2026-11-05: utente ha chiesto di procedere con l'ipotesi di analisi del crash. Non registrare come risolta la causa senza un nuovo test.
+
+## Ipotesi e punti da confermare
+- La causa del crash sembra collegata al percorso di risoluzione della carta, non al targeting, ma punto esatto e causa radice richiedono conferma su sorgenti, dump e simboli pertinenti.
+- In una chat è stata prospettata la mancanza di implementazione dell'effetto per un ID individuato nel file Cards.dat. Non considerarla causa confermata finché non sono verificati ID, dispatcher, funzione e mappatura nell'esatta DLL testata.
+- I contenuti integrali degli allegati dump.dmp, dump.txt, Cards.dat e dei log WinDbg non sono riprodotti qui; recuperarli dalle rispettive chat se necessari. Non inventare indirizzi, stack trace o risultati assenti.
+
+## Prossimo passo operativo
+1. Partire dalla DLL della run 41855928764 e individuare il commit esatto associato alla build.
+2. Verificare il percorso di risoluzione di Orim's Chant e l'eventuale ID/handler mancante, confrontando solo i file strettamente pertinenti.
+3. Correlare l'istruzione di crash e lo stack del dump con la versione corretta di Magic.dll e i simboli disponibili.
+4. Formulare una singola modifica minima, compilare e riprovare nel gioco sia targeting sia risoluzione.
+5. Registrare nel presente file: commit SHA, run GitHub Actions, modifica effettuata, risultato del test, ipotesi confermata/smentita e prossimo passo.
+
+## Regola di manutenzione
+Aggiornare questo file dopo ogni milestone importante, senza trasformarlo in un diario prolisso. Mantenere separati FATTI CONFERMATI, IPOTESI, TEST IN ATTESA e RIFERIMENTI (commit/run). Non usare l'esistenza di una build riuscita come prova di assenza di crash.
