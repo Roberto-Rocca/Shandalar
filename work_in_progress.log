@@ -69,3 +69,11 @@ Aggiornare questo file dopo ogni milestone importante, senza trasformarlo in un 
 4. Compilare una sola modifica, testare Orim's Chant senza kicker e con kicker, avversario e giocatore, verificare assenza di crash e durata dell'effetto fino a fine turno.
 
 Stato: solo diagnosi, nessuna patch al codice applicata e nessun test runtime nuovo.
+
+## 2026-11-05 - Verifica mirata successiva (nessuna patch)
+- Riferimento sorgenti identico alla run 41855928764: commit `00cc5c8b97bcf9ae8e6723caa8935e7bc4fe1e84`.
+- Confermato dal report `dump.dmp` testuale (385 byte) che sono presenti l'assert `is_reserved_id(csvid)` e soli indirizzi di ritorno, senza valori degli argomenti/simboli. Il `csvid` incriminato NON e' ricavabile dal report da solo.
+- In `src/functions/rules_engine.c` le funzioni `shape_deadbox` e `shape_rules_engine` chiamano `generate_reserved_token_by_id` rispettivamente con `CARD_ID_DEADBOX` e `CARD_ID_RULES_ENGINE`, esplicitamente esentati dalla classificazione `TYPE_EFFECT` in `is_reserved_id` **solo se** la mappatura `get_internal_card_id_from_csv_id` e `cards_data[iid].id` sono coerenti.
+- Esiste anche un chiamante in `src/cards/recoded_cards.c` che usa `CARD_ID_EVIL_TWIN_EFFECT`: non inferire che sia coinvolto nel crash di Orim's Chant.
+- Non individuata ancora la definizione di `target_player_cant_cast_type` nei pochi sorgenti esaminati; il nesso fra tale funzione e l'assert resta NON CONFERMATO. Non e' prudente modificare ID o disattivare l'ASSERT ora.
+- Prossimo singolo test diagnostico suggerito: acquisire il valore numerico `csvid` ed `iid` immediatamente prima della `ASSERT` con log temporaneo, oppure simbolizzare lo stack usando l'esatta DLL + file .dbg/.map della run; poi scegliere una correzione circoscritta alla mappatura realmente difettosa. Nessuna modifica eseguibile o test in gioco eseguiti in questa fase.
