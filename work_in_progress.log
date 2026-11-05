@@ -49,3 +49,23 @@ Scopo: riferimento sintetico e persistente per riprendere le analisi in nuove ch
 
 ## Regola di manutenzione
 Aggiornare questo file dopo ogni milestone importante, senza trasformarlo in un diario prolisso. Mantenere separati FATTI CONFERMATI, IPOTESI, TEST IN ATTESA e RIFERIMENTI (commit/run). Non usare l'esistenza di una build riuscita come prova di assenza di crash.
+
+## 2026-11-05 - Diagnosi assertion Orim's Chant (run 41855928764)
+
+### FATTI CONFERMATI
+- Allegato `dump.dmp` esaminato: non e' un minidump binario ma un report testuale di 385 byte. Riporta `Assertion failed`, `functions/token_generation.c:486`, `is_reserved_id(csvid)` e indirizzi di stack senza simboli.
+- Run https://github.com/Roberto-Rocca/Shandalar/actions/runs/41855928764: workflow diagnostic riuscito, branch `fix/orims-chant-null-prompt-20261104`, commit `00cc5c8b97bcf9ae8e6723caa8935e7bc4fe1e84` (run completata 2026-11-04). Il successo CI non prova la correttezza runtime.
+- In `src/functions/token_generation.c:486`, `generate_reserved_token_by_id(player, csvid)` esegue `ASSERT(is_reserved_id(csvid))`. Il check `is_reserved_id` (circa riga 224) richiede mappatura valida e coincidente in `cards_data`; sono ammessi esplicitamente RULES_ENGINE e DEADBOX, oppure un record marcato come Vanguard/TYPE_EFFECT.
+- In `src/cards/planeshift.c`, `card_orims_chant`, `EVENT_RESOLVE_SPELL` chiama `target_player_cant_cast_type(player, card, instance->targets[0].player, TYPE_ANY)`; se kicked aggiunge `SE_CREATURES_CANT_ATTACK`. Non si osserva una chiamata diretta a `generate_reserved_token_by_id` in questa funzione.
+
+### IPOTESI DA VERIFICARE
+- La creazione dell'effetto del divieto di lanciare magie attraversa `generate_reserved_token_by_id` con un csvid che la specifica installazione (Cards.dat / mapping ID interno) non qualifica come riservato. Possibili motivi: ID mancante, mappatura disallineata o flag/type inattesi. La causa precisa e il csvid concreto NON risultano nel report.
+- Senza simbolizzazione degli indirizzi del report e senza controllare i chiamanti di `target_player_cant_cast_type`, il collegamento causale Orim's Chant -> assertion resta ipotesi forte ma non dimostrata.
+
+### INTERVENTO MINIMO PROPOSTO / TEST IN ATTESA
+1. Esaminare solo l'implementazione di `target_player_cant_cast_type` e il suo percorso di creazione dell'effetto; determinare il `csvid` passato a `generate_reserved_token_by_id` (o altro chiamante presente nello stack).
+2. Confrontare quell'ID con `card_id.h`, `Cards.dat` effettivamente installato, `get_internal_card_id_from_csv_id` e `cards_data[iid]` (id/type/cc[2]); strumentare temporaneamente prima dell'assert per registrare csvid/iid, solo se serve.
+3. Correggere esclusivamente ID, mapping oppure tipo di generazione dell'effetto sulla base del risultato. NON rimuovere l'ASSERT alla cieca: nasconderebbe una violazione d'invariante.
+4. Compilare una sola modifica, testare Orim's Chant senza kicker e con kicker, avversario e giocatore, verificare assenza di crash e durata dell'effetto fino a fine turno.
+
+Stato: solo diagnosi, nessuna patch al codice applicata e nessun test runtime nuovo.
